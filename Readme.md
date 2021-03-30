@@ -1,7 +1,7 @@
 # Проект «Киноман»
 
 * Студент: [Александр Лебедев](https://up.htmlacademy.ru/ecmascript/14/user/826187).
-* Наставник: `Неизвестно`.
+* Наставник: [Белик Павел](https://htmlacademy.ru/profile/id84572).
 
 ---
 
