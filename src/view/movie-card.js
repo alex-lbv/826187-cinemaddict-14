@@ -29,7 +29,7 @@ export const createMovieCardTemplate = (film) => {
           <h3 class="film-card__title">${title}</h3>
           <p class="film-card__rating">${rating}</p>
           <p class="film-card__info">
-            <span class="film-card__year">${getDate(productionYear, false)}</span>
+            <span class="film-card__year">${getDate(productionYear, 'YYYY')}</span>
             <span class="film-card__duration">${getDuration(duration)}h ${getDuration(duration, false)}m</span>
             <span class="film-card__genre">${genres[0]}</span>
           </p>

@@ -107,7 +107,7 @@ export const createMovieDetailsTemplate = (film) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Release Date</td>
-              <td class="film-details__cell">${getDate(productionYear)}</td>
+              <td class="film-details__cell">${getDate(productionYear, 'D MMMM YYYY')}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
