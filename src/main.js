@@ -8,10 +8,10 @@ import {generateFilm} from './mock/film.js';
 import {generateFilter} from './mock/filter.js';
 import {createFooterStatisticsTemplate} from './view/footer-statistics.js';
 import {renderTemplate} from './utils.js';
+import {createFilmListTemplate} from './view/film-list.js';
 
 const FILM_COUNT = 20;
 const FILM_COUNT_PER_STEP = 5;
-const FILM_EXTRA_COUNT = 2;
 
 const films = new Array(FILM_COUNT).fill(null).map(generateFilm);
 const filters = generateFilter(films);
@@ -27,7 +27,11 @@ const siteSortElement = siteMainElement.querySelector('.sort');
 
 renderTemplate(siteSortElement, createContentTemplate(), 'afterend');
 
-const siteFilmListElement = siteMainElement.querySelector('.films-list__container');
+const siteContentElement = siteMainElement.querySelector('.films');
+
+renderTemplate(siteContentElement, createFilmListTemplate(), 'afterbegin');
+
+const siteFilmListElement = siteContentElement.querySelector('.films-list__container');
 
 for (let i = 0; i < Math.min(films.length, FILM_COUNT_PER_STEP); i++) {
   renderTemplate(siteFilmListElement, createMovieCardTemplate(films[i]), 'beforeend');
@@ -51,14 +55,6 @@ if (films.length > FILM_COUNT_PER_STEP) {
       loadMoreButton.remove();
     }
   });
-}
-
-const siteFilmListExtraElement = siteMainElement.querySelectorAll('.films-list--extra > .films-list__container');
-
-for (const filmListExtra of siteFilmListExtraElement) {
-  for (let i = 0; i < FILM_EXTRA_COUNT; i++) {
-    renderTemplate(filmListExtra, createMovieCardTemplate(films[i]), 'beforeend');
-  }
 }
 
 const siteFooterElement = document.querySelector('.footer');
