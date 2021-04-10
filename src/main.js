@@ -4,11 +4,12 @@ import {createUserRankTemplate} from './view/user-rank.js';
 import {createLoadMoreTemplate} from './view/load-more-button.js';
 import {createMovieDetailsTemplate} from './view/movie-details.js';
 import {createContentTemplate} from './view/content.js';
+import {createFooterStatisticsTemplate} from './view/footer-statistics.js';
+import {createFilmListTemplate} from './view/film-list.js';
+import {createSortTemplate} from './view/sort.js';
+import {renderTemplate} from './utils.js';
 import {generateFilm} from './mock/film.js';
 import {generateFilter} from './mock/filter.js';
-import {createFooterStatisticsTemplate} from './view/footer-statistics.js';
-import {renderTemplate} from './utils.js';
-import {createFilmListTemplate} from './view/film-list.js';
 
 const FILM_COUNT = 20;
 const FILM_COUNT_PER_STEP = 5;
@@ -22,6 +23,8 @@ const siteHeaderElement = document.querySelector('.header');
 renderTemplate(siteHeaderElement, createUserRankTemplate(filters[2]), 'beforeend');
 
 renderTemplate(siteMainElement, createSiteMenuTemplate(filters), 'afterbegin');
+
+renderTemplate(siteMainElement, createSortTemplate(), 'beforeend');
 
 const siteSortElement = siteMainElement.querySelector('.sort');
 
