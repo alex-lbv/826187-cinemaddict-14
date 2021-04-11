@@ -11,6 +11,7 @@ import FooterStatisticsView from './view/footer-statistics.js';
 import FilmListView from './view/film-list.js';
 import SortView from './view/sort.js';
 import FilmListContainerView from './view/film-list-container.js';
+import ListEmptyView from './view/list-empty.js';
 
 const FILM_COUNT = 20;
 const FILM_COUNT_PER_STEP = 5;
@@ -69,7 +70,13 @@ render(siteMainElement, contentComponent.getElement(), RenderPosition.BEFOREEND)
 
 const filmListComponent = new FilmListView;
 
-render(contentComponent.getElement(), filmListComponent.getElement(), RenderPosition.AFTERBEGIN);
+if (films.length === 0) {
+  sortComponent.getElement().remove();
+  sortComponent.removeElement();
+  render(contentComponent.getElement(), new ListEmptyView().getElement(), RenderPosition.AFTERBEGIN);
+} else {
+  render(contentComponent.getElement(), filmListComponent.getElement(), RenderPosition.AFTERBEGIN);
+}
 
 const filmListContainerComponent = new FilmListContainerView();
 

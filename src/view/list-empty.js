@@ -1,12 +1,16 @@
 import {createElement} from '../utils.js';
 
-export default class Content {
+export default class ListEmpty {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return '<section class="films"></section>';
+    return (
+      `<section class="films-list">
+        <h2 class="films-list__title">There are no movies in our database</h2>
+      </section>`
+    );
   }
 
   getElement() {
