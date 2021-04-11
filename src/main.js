@@ -1,6 +1,6 @@
 import {createSiteMenuTemplate} from './view/site-menu.js';
 import {createMovieCardTemplate} from './view/movie-card.js';
-import {createUserRankTemplate} from './view/user-rank.js';
+import UserRankView from './view/user-rank.js';
 import LoadMoreButtonView from './view/load-more-button.js';
 import {createMovieDetailsTemplate} from './view/movie-details.js';
 import ContentView from './view/content.js';
@@ -20,7 +20,7 @@ const filters = generateFilter(films);
 const siteMainElement = document.querySelector('.main');
 const siteHeaderElement = document.querySelector('.header');
 
-renderTemplate(siteHeaderElement, createUserRankTemplate(filters[2]), 'beforeend');
+renderElement(siteHeaderElement, new UserRankView(filters[2]).getElement(), RenderPosition.BEFOREEND);
 
 renderTemplate(siteMainElement, createSiteMenuTemplate(filters), 'afterbegin');
 

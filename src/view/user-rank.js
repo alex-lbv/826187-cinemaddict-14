@@ -1,6 +1,6 @@
-import {numberInRange} from '../utils.js';
+import {createElement, numberInRange} from '../utils.js';
 
-export const createUserRankTemplate = (filter) => {
+const createUserRankTemplate = (filter) => {
   const {count} = filter;
 
   const levelRangeMap = {
@@ -31,3 +31,26 @@ export const createUserRankTemplate = (filter) => {
     <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
   </section>`;
 };
+
+export default class UserRank {
+  constructor(filter) {
+    this._filter = filter;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createUserRankTemplate(this._filter);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
