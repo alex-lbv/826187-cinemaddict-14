@@ -1,15 +1,15 @@
+import {renderElement, RenderPosition, renderTemplate} from './utils.js';
+import {generateFilm} from './mock/film.js';
+import {generateFilter} from './mock/filter.js';
 import SiteMenuView from './view/site-menu.js';
-import {createMovieCardTemplate} from './view/movie-card.js';
+import MovieCardView from './view/movie-card.js';
+import MovieDetailsView from './view/movie-details.js';
 import UserRankView from './view/user-rank.js';
 import LoadMoreButtonView from './view/load-more-button.js';
-import {createMovieDetailsTemplate} from './view/movie-details.js';
 import ContentView from './view/content.js';
 import {createFooterStatisticsTemplate} from './view/footer-statistics.js';
 import FilmListView from './view/film-list.js';
 import SortView from './view/sort.js';
-import {renderElement, RenderPosition, renderTemplate} from './utils.js';
-import {generateFilm} from './mock/film.js';
-import {generateFilter} from './mock/filter.js';
 
 const FILM_COUNT = 20;
 const FILM_COUNT_PER_STEP = 5;
@@ -41,7 +41,7 @@ renderElement(contentComponent.getElement(), filmListComponent.getElement(), Ren
 const siteFilmListContainerElement = siteContentElement.querySelector('.films-list__container');
 
 for (let i = 0; i < Math.min(films.length, FILM_COUNT_PER_STEP); i++) {
-  renderTemplate(siteFilmListContainerElement, createMovieCardTemplate(films[i]), 'beforeend');
+  renderElement(siteFilmListContainerElement, new MovieCardView(films[i]).getElement(), RenderPosition.BEFOREEND);
 }
 
 if (films.length > FILM_COUNT_PER_STEP) {
@@ -54,7 +54,7 @@ if (films.length > FILM_COUNT_PER_STEP) {
     evt.preventDefault();
     films
       .slice(renderFilmCount, renderFilmCount + FILM_COUNT_PER_STEP)
-      .forEach((film) => renderTemplate(siteFilmListContainerElement, createMovieCardTemplate(film), 'beforeend'));
+      .forEach((film) => renderElement(siteFilmListContainerElement, new MovieCardView(film).getElement(), RenderPosition.BEFOREEND));
 
     renderFilmCount += FILM_COUNT_PER_STEP;
 
@@ -67,7 +67,7 @@ if (films.length > FILM_COUNT_PER_STEP) {
 
 const siteFooterElement = document.querySelector('.footer');
 
-renderTemplate(siteFooterElement, createMovieDetailsTemplate(films[0]), 'afterend');
+renderElement(siteMainElement, new MovieDetailsView(films[0]).getElement(), RenderPosition.BEFOREEND);
 
 const footerStatistics = siteFooterElement.querySelector('.footer__statistics');
 renderTemplate(footerStatistics, createFooterStatisticsTemplate(filters[0]), 'beforeend');

@@ -1,4 +1,5 @@
 import {getDuration, getDate, getCommentDate} from '../const.js';
+import {createElement} from '../utils.js';
 
 const createFilmGenresList = (genres) => {
   const genresList = Object.values(genres).map((genre) => `<span class="film-details__genre">${genre}</span>`).join('');
@@ -36,7 +37,7 @@ const createFilmComments = (comments) => {
   return `<ul class="film-details__comments-list">${commentsList}</ul>`;
 };
 
-export const createMovieDetailsTemplate = (film) => {
+const createMovieDetailsTemplate = (film) => {
   const {
     comments,
     filmInfo: {
@@ -178,3 +179,26 @@ export const createMovieDetailsTemplate = (film) => {
   </form>
 </section>`;
 };
+
+export default class MovieDetails {
+  constructor(film) {
+    this._film = film;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createMovieDetailsTemplate(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

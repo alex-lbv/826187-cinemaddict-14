@@ -1,6 +1,7 @@
 import {getDuration, getDate} from '../const.js';
+import {createElement} from '../utils.js';
 
-export const createMovieCardTemplate = (film) => {
+const createMovieCardTemplate = (film) => {
   const {
     comments,
     filmInfo: {
@@ -49,3 +50,26 @@ export const createMovieCardTemplate = (film) => {
           </div>
         </article>`;
 };
+
+export default class MovieCard {
+  constructor(film) {
+    this._film = film;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createMovieCardTemplate(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
