@@ -1,11 +1,5 @@
 import {createElement} from '../utils.js';
 
-const createFooterStatisticsTemplate = (filter) => {
-  const {count} = filter;
-
-  return `<p>${count} movies inside</p>`;
-};
-
 export default class FooterStatistics {
   constructor(filter) {
     this._filter = filter;
@@ -13,7 +7,9 @@ export default class FooterStatistics {
   }
 
   getTemplate() {
-    return createFooterStatisticsTemplate(this._filter);
+    const {count} = this._filter;
+
+    return `<p>${count} movies inside</p>`;
   }
 
   getElement() {

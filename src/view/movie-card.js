@@ -1,32 +1,39 @@
 import {getDuration, getDate} from '../const.js';
 import {createElement} from '../utils.js';
 
-const createMovieCardTemplate = (film) => {
-  const {
-    comments,
-    filmInfo: {
-      title,
-      poster,
-      shortDescription,
-      rating,
-      genres,
-      duration,
-      release: {
-        productionYear,
+export default class MovieCard {
+  constructor(film) {
+    this._film = film;
+    this._element = null;
+  }
+
+  getTemplate() {
+    const {
+      comments,
+      filmInfo: {
+        title,
+        poster,
+        shortDescription,
+        rating,
+        genres,
+        duration,
+        release: {
+          productionYear,
+        },
       },
-    },
-    userDetails: {
-      isOnWatchlist,
-      viewed,
-      isFavorite,
-    },
-  } = film;
+      userDetails: {
+        isOnWatchlist,
+        viewed,
+        isFavorite,
+      },
+    } = this._film;
 
-  const activeClassName = (condition) => {
-    return condition ? 'film-card__controls-item--active' : '';
-  };
+    const activeClassName = (condition) => {
+      return condition ? 'film-card__controls-item--active' : '';
+    };
 
-  return `<article class="film-card">
+    return (
+      `<article class="film-card">
           <h3 class="film-card__title">${title}</h3>
           <p class="film-card__rating">${rating}</p>
           <p class="film-card__info">
@@ -48,17 +55,8 @@ const createMovieCardTemplate = (film) => {
                 class="film-card__controls-item button film-card__controls-item--favorite ${activeClassName(isFavorite)}"
                 type="button">Mark as favorite</button>
           </div>
-        </article>`;
-};
-
-export default class MovieCard {
-  constructor(film) {
-    this._film = film;
-    this._element = null;
-  }
-
-  getTemplate() {
-    return createMovieCardTemplate(this._film);
+        </article>`
+    );
   }
 
   getElement() {
