@@ -22,6 +22,7 @@ const siteBodyElement = document.querySelector('body');
 const siteMainElement = siteBodyElement.querySelector('.main');
 const siteHeaderElement = siteBodyElement.querySelector('.header');
 const siteFooterElement = document.querySelector('.footer');
+const footerStatistics = siteFooterElement.querySelector('.footer__statistics');
 
 const renderFilm = (filmListElement, film) => {
   const filmComponent = new MovieCardView(film);
@@ -37,21 +38,10 @@ const renderFilm = (filmListElement, film) => {
     siteBodyElement.classList.remove('hide-overflow');
   };
 
-  filmComponent.getElement().querySelector('.film-card__poster').addEventListener('click', () => {
-    viewFilmDetail();
-  });
-
-  filmComponent.getElement().querySelector('.film-card__title').addEventListener('click', () => {
-    viewFilmDetail();
-  });
-
-  filmComponent.getElement().querySelector('.film-card__comments').addEventListener('click', () => {
-    viewFilmDetail();
-  });
-
-  filmDetail.getElement().querySelector('.film-details__close-btn').addEventListener('click', () => {
-    closeFilmDetail();
-  });
+  filmComponent.getElement().querySelector('.film-card__poster').addEventListener('click', viewFilmDetail);
+  filmComponent.getElement().querySelector('.film-card__title').addEventListener('click', viewFilmDetail);
+  filmComponent.getElement().querySelector('.film-card__comments').addEventListener('click', viewFilmDetail);
+  filmDetail.getElement().querySelector('.film-details__close-btn').addEventListener('click', closeFilmDetail);
 
   render(filmListElement, filmComponent.getElement(), RenderPosition.BEFOREEND);
 };
@@ -101,5 +91,4 @@ if (films.length > FILM_COUNT_PER_STEP) {
   });
 }
 
-const footerStatistics = siteFooterElement.querySelector('.footer__statistics');
 render(footerStatistics, new FooterStatisticsView(filters[0]).getElement(), RenderPosition.BEFOREEND);
