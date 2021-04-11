@@ -6,8 +6,8 @@ import {createMovieDetailsTemplate} from './view/movie-details.js';
 import {createContentTemplate} from './view/content.js';
 import {createFooterStatisticsTemplate} from './view/footer-statistics.js';
 import {createFilmListTemplate} from './view/film-list.js';
-import {createSortTemplate} from './view/sort.js';
-import {renderTemplate} from './utils.js';
+import SortView from './view/sort.js';
+import {renderElement, RenderPosition, renderTemplate} from './utils.js';
 import {generateFilm} from './mock/film.js';
 import {generateFilter} from './mock/filter.js';
 
@@ -24,7 +24,9 @@ renderTemplate(siteHeaderElement, createUserRankTemplate(filters[2]), 'beforeend
 
 renderTemplate(siteMainElement, createSiteMenuTemplate(filters), 'afterbegin');
 
-renderTemplate(siteMainElement, createSortTemplate(), 'beforeend');
+const sortComponent = new SortView();
+
+renderElement(siteMainElement, sortComponent.getElement(), RenderPosition.BEFOREEND);
 
 const siteSortElement = siteMainElement.querySelector('.sort');
 
