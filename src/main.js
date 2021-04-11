@@ -1,4 +1,4 @@
-import {createSiteMenuTemplate} from './view/site-menu.js';
+import SiteMenuView from './view/site-menu.js';
 import {createMovieCardTemplate} from './view/movie-card.js';
 import UserRankView from './view/user-rank.js';
 import LoadMoreButtonView from './view/load-more-button.js';
@@ -22,7 +22,7 @@ const siteHeaderElement = document.querySelector('.header');
 
 renderElement(siteHeaderElement, new UserRankView(filters[2]).getElement(), RenderPosition.BEFOREEND);
 
-renderTemplate(siteMainElement, createSiteMenuTemplate(filters), 'afterbegin');
+renderElement(siteMainElement, new SiteMenuView(filters).getElement(), RenderPosition.AFTERBEGIN);
 
 const sortComponent = new SortView();
 
