@@ -7,7 +7,7 @@ import MovieDetailsView from './view/movie-details.js';
 import UserRankView from './view/user-rank.js';
 import LoadMoreButtonView from './view/load-more-button.js';
 import ContentView from './view/content.js';
-import {createFooterStatisticsTemplate} from './view/footer-statistics.js';
+import FooterStatisticsView from './view/footer-statistics.js';
 import FilmListView from './view/film-list.js';
 import SortView from './view/sort.js';
 
@@ -70,7 +70,7 @@ const siteFooterElement = document.querySelector('.footer');
 renderElement(siteMainElement, new MovieDetailsView(films[0]).getElement(), RenderPosition.BEFOREEND);
 
 const footerStatistics = siteFooterElement.querySelector('.footer__statistics');
-renderTemplate(footerStatistics, createFooterStatisticsTemplate(filters[0]), 'beforeend');
+renderElement(footerStatistics, new FooterStatisticsView(filters[0]).getElement(), RenderPosition.BEFOREEND);
 
 // Временно скрывает попап
 const siteFilmDetails = document.querySelector('.film-details');
