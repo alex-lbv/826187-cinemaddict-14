@@ -1,3 +1,5 @@
+import {createElement} from '../utils.js';
+
 const createFilterItemTemplate = (filter, isActive) => {
   const {name, count, number} = filter;
 
@@ -13,20 +15,36 @@ const createFilterItemTemplate = (filter, isActive) => {
   );
 };
 
-export const createSiteMenuTemplate = (filterItems) => {
-  const filterItemsTemplate = filterItems
-    .map((filter, index) => createFilterItemTemplate(filter, index === 0)).join('');
+export default class SiteMenu {
+  constructor(filterItems) {
+    this._filterItems = filterItems;
+    this._element = null;
+  }
 
-  return `<nav class="main-navigation">
-    <div class="main-navigation__items">
-    ${filterItemsTemplate}
-    </div>
-    <a href="#stats" class="main-navigation__additional">Stats</a>
-  </nav>
+  getTemplate() {
+    const filterItemsTemplate = this._filterItems
+      .map((filter, index) => createFilterItemTemplate(filter, index === 0)).join('');
 
-  <ul class="sort">
-    <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
-    <li><a href="#" class="sort__button">Sort by date</a></li>
-    <li><a href="#" class="sort__button">Sort by rating</a></li>
-  </ul>`;
-};
+    return (
+      `<nav class="main-navigation">
+        <div class="main-navigation__items">
+            ${filterItemsTemplate}
+        </div>
+        <a href="#stats" class="main-navigation__additional">Stats</a>
+      </nav>`
+    );
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
+

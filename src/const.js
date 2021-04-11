@@ -6,10 +6,8 @@ export const getDuration = (duration, inHours = true) => {
   return (inHours) ? totalDurations.hours() : totalDurations.minutes();
 };
 
-export const getDate = (productionYear, full = true) => {
-  return (full)
-    ? dayjs(productionYear).format('D MMMM YYYY')
-    : dayjs(productionYear).format('YYYY');
+export const getDate = (productionYear, format) => {
+  return dayjs(productionYear).format(format);
 };
 
 export const getCommentDate = (date) => {
