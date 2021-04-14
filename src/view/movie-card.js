@@ -1,10 +1,10 @@
 import {getDuration, getDate} from '../const.js';
-import {createElement} from '../utils.js';
+import AbstractView from './abstract.js';
 
-export default class MovieCard {
+export default class MovieCard extends AbstractView {
   constructor(film) {
+    super();
     this._film = film;
-    this._element = null;
   }
 
   getTemplate() {
@@ -57,17 +57,5 @@ export default class MovieCard {
           </div>
         </article>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,9 +1,10 @@
-import {createElement, numberInRange} from '../utils.js';
+import {numberInRange} from '../utils.js';
+import AbstractView from './abstract.js';
 
-export default class UserRank {
+export default class UserRank extends AbstractView {
   constructor(filter) {
+    super();
     this._filter = filter;
-    this._element = null;
   }
 
   getTemplate() {
@@ -38,17 +39,5 @@ export default class UserRank {
         <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
     </section>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
