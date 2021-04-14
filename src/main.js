@@ -48,10 +48,8 @@ const renderFilm = (filmListElement, film) => {
     document.removeEventListener('keydown', onEscKeyDown);
   };
 
-  filmComponent.getElement().querySelector('.film-card__poster').addEventListener('click', viewFilmDetail);
-  filmComponent.getElement().querySelector('.film-card__title').addEventListener('click', viewFilmDetail);
-  filmComponent.getElement().querySelector('.film-card__comments').addEventListener('click', viewFilmDetail);
-  filmDetail.getElement().querySelector('.film-details__close-btn').addEventListener('click', closeFilmDetail);
+  filmComponent.setViewClickHandler(viewFilmDetail);
+  filmDetail.setCloseClickHandler(closeFilmDetail);
 
   render(filmListElement, filmComponent.getElement(), RenderPosition.BEFOREEND);
 };
@@ -86,8 +84,7 @@ const renderFilmList = (filmListContainer, films) => {
 
     render(filmListComponent.getElement(), loadMoreButtonComponent.getElement(), RenderPosition.BEFOREEND);
 
-    loadMoreButtonComponent.getElement().addEventListener('click', (evt) => {
-      evt.preventDefault();
+    loadMoreButtonComponent.setClickHandler(() => {
       films
         .slice(renderFilmCount, renderFilmCount + FILM_COUNT_PER_STEP)
         .forEach((film) => renderFilm(filmListContainerComponent.getElement(), film));

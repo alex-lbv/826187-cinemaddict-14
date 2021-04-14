@@ -5,6 +5,8 @@ export default class MovieCard extends AbstractView {
   constructor(film) {
     super();
     this._film = film;
+
+    this._viewClickHandler = this._viewClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -57,5 +59,17 @@ export default class MovieCard extends AbstractView {
           </div>
         </article>`
     );
+  }
+
+  _viewClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.viewClick();
+  }
+
+  setViewClickHandler(callback) {
+    this._callback.viewClick = callback;
+    this.getElement().querySelector('.film-card__poster').addEventListener('click', this._viewClickHandler);
+    this.getElement().querySelector('.film-card__title').addEventListener('click', this._viewClickHandler);
+    this.getElement().querySelector('.film-card__comments').addEventListener('click', this._viewClickHandler);
   }
 }
