@@ -1,14 +1,14 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration.js';
 import {
-  generateList,
   getRandomElementOfArray,
   getRandomFloatNumber,
   getRandomInteger,
   getRandomLengthArray
-} from '../utils.js';
+} from '../utils/common.js';
 import {generateComments} from './comment.js';
 import {generateDate} from '../const.js';
+import {generateList} from '../utils/film.js';
 
 dayjs.extend(duration);
 

@@ -1,5 +1,5 @@
 import {getDuration, getDate, getCommentDate} from '../const.js';
-import {createElement} from '../utils.js';
+import AbstractView from './abstract.js';
 
 const createFilmGenresList = (genres) => {
   const genresList = Object.values(genres).map((genre) => `<span class="film-details__genre">${genre}</span>`).join('');
@@ -37,10 +37,12 @@ const createFilmComments = (comments) => {
   return `<ul class="film-details__comments-list">${commentsList}</ul>`;
 };
 
-export default class MovieDetails {
+export default class MovieDetails extends AbstractView {
   constructor(film) {
+    super();
     this._film = film;
-    this._element = null;
+
+    this._closeClickHandler = this._closeClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -188,15 +190,13 @@ export default class MovieDetails {
     );
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _closeClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.closeClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setCloseClickHandler(callback) {
+    this._callback.closeClick = callback;
+    this.getElement().querySelector('.film-details__close-btn').addEventListener('click', this._closeClickHandler);
   }
 }

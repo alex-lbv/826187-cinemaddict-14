@@ -1,10 +1,12 @@
 import {getDuration, getDate} from '../const.js';
-import {createElement} from '../utils.js';
+import AbstractView from './abstract.js';
 
-export default class MovieCard {
+export default class MovieCard extends AbstractView {
   constructor(film) {
+    super();
     this._film = film;
-    this._element = null;
+
+    this._viewClickHandler = this._viewClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -59,15 +61,15 @@ export default class MovieCard {
     );
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _viewClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.viewClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setViewClickHandler(callback) {
+    this._callback.viewClick = callback;
+    this.getElement().querySelector('.film-card__poster').addEventListener('click', this._viewClickHandler);
+    this.getElement().querySelector('.film-card__title').addEventListener('click', this._viewClickHandler);
+    this.getElement().querySelector('.film-card__comments').addEventListener('click', this._viewClickHandler);
   }
 }
