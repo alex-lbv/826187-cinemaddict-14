@@ -1,5 +1,5 @@
-import {getRandomElementOfArray} from '../utils.js';
 import {generateDate} from '../const.js';
+import {getRandomElementOfArray} from '../utils/common.js';
 
 const COMMENTS = [
   'Interesting setting and a good cast' +

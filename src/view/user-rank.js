@@ -1,5 +1,5 @@
-import {numberInRange} from '../utils.js';
 import AbstractView from './abstract.js';
+import {numberInRange} from '../utils/common.js';
 
 export default class UserRank extends AbstractView {
   constructor(filter) {

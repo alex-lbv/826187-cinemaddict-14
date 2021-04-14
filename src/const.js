@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import {getRandomInteger} from './utils.js';
+import {getRandomInteger} from './utils/common.js';
 
 export const getDuration = (duration, inHours = true) => {
   const totalDurations = dayjs.duration(duration, 'minutes');
