@@ -71,7 +71,7 @@ export default class Content {
       .forEach((film) => this._renderFilm(film));
   }
 
-  _renderList() {
+  _renderFilmList() {
     render(this._contentComponent, this._filmListComponent, RenderPosition.AFTERBEGIN);
   }
 
@@ -101,7 +101,7 @@ export default class Content {
     });
   }
 
-  _renderFilmList() {
+  _renderFilmsCards() {
     this._renderFilms(0, Math.min(this._films.length, FILM_COUNT_PER_STEP));
 
     if (this._films.length > FILM_COUNT_PER_STEP) {
@@ -113,10 +113,10 @@ export default class Content {
     if (this._films.length === 0) {
       this._renderListEmpty();
     } else {
-      this._renderList();
+      this._renderFilmList();
     }
 
     this._renderListContainer();
-    this._renderFilmList();
+    this._renderFilmsCards();
   }
 }
