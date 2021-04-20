@@ -1,6 +1,7 @@
 import MovieCardView from '../view/movie-card.js';
 import MovieDetailsView from '../view/movie-details.js';
-import {render, RenderPosition} from '../utils/render.js';
+import {remove, render, RenderPosition} from '../utils/render.js';
+import {replace} from '../utils/common.js';
 
 const siteBodyElement = document.querySelector('body');
 
@@ -19,13 +20,35 @@ export default class Film {
   init(film) {
     this._film = film;
 
+    const prevFilmComponent = this._filmComponent;
+    const prevFilmDetail = this._filmDetail;
+
     this._filmComponent = new MovieCardView(film);
     this._filmDetail = new MovieDetailsView(film);
 
     this._filmComponent.setViewClickHandler(this._handleViewClick);
     this._filmDetail.setCloseClickHandler(this._handleCloseClick);
 
-    render(this._filmListContainer, this._filmComponent, RenderPosition.BEFOREEND);
+    if (prevFilmComponent === null || prevFilmDetail === null) {
+      render(this._filmListContainer, this._filmComponent, RenderPosition.BEFOREEND);
+      return;
+    }
+
+    if (this._filmListContainer.getElement().contains(prevFilmComponent.getElement())) {
+      replace(this._filmComponent, prevFilmComponent);
+    }
+
+    if (this._filmListContainer.getElement().contains(prevFilmDetail.getElement())) {
+      replace(this._filmDetail, prevFilmDetail);
+    }
+
+    remove(prevFilmComponent);
+    remove(prevFilmDetail);
+  }
+
+  destroy() {
+    remove(this._filmComponent);
+    remove(this._filmDetail);
   }
 
   _viewFilmDetail() {
