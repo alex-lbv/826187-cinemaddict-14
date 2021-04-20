@@ -24,19 +24,21 @@ export default class Content {
     this._listEmpty = new ListEmptyView();
     this._loadMoreButtonComponent = new LoadMoreButtonView();
 
-    this._handleFimChange = this._handleFimChange.bind(this);
+    this._handleFilmChange = this._handleFilmChange.bind(this);
     this._handleLoadMoreButtonClick = this._handleLoadMoreButtonClick.bind(this);
   }
 
   init(films, filters) {
     this._films = films.slice();
+
     render(this._contentContainer, new SiteMenuView(filters), RenderPosition.AFTERBEGIN);
     this._renderSort();
     render(this._contentContainer, this._contentComponent, RenderPosition.BEFOREEND);
+
     this._renderContent();
   }
 
-  _handleFimChange(updatedFilm) {
+  _handleFilmChange(updatedFilm) {
     this._films = updateItem(this._films, updatedFilm);
     this._filmPresenter[updatedFilm.id].init(updatedFilm);
   }
@@ -46,7 +48,7 @@ export default class Content {
   }
 
   _renderFilm(film) {
-    const filmPresenter = new FilmPresenter(this._filmListContainerComponent);
+    const filmPresenter = new FilmPresenter(this._filmListContainerComponent, this._handleFilmChange);
     filmPresenter.init(film);
     this._filmPresenter[film.id] = filmPresenter;
   }
