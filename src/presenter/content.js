@@ -14,6 +14,7 @@ export default class Content {
   constructor(contentContainer) {
     this._contentContainer = contentContainer;
     this._renderedFilmCount = FILM_COUNT_PER_STEP;
+    this._filmPresenter = {};
 
     this._contentComponent = new ContentView();
     this._sortComponent = new SortView();
@@ -39,6 +40,7 @@ export default class Content {
   _renderFilm(film) {
     const filmPresenter = new FilmPresenter(this._filmListContainerComponent);
     filmPresenter.init(film);
+    this._filmPresenter[film.id] = filmPresenter;
   }
 
   _renderFilms(from, to) {
@@ -72,6 +74,15 @@ export default class Content {
   _renderLoadMoreButton() {
     render(this._filmListComponent, this._loadMoreButtonComponent, RenderPosition.BEFOREEND);
     this._loadMoreButtonComponent.setClickHandler(this._handleLoadMoreButtonClick);
+  }
+
+  _clearFilmList() {
+    Object
+      .values(this._filmPresenter)
+      .forEach((presenter) => presenter.destroy());
+    this._filmPresenter = {};
+    this._renderedFilmCount = FILM_COUNT_PER_STEP;
+    remove(this._loadMoreButtonComponent);
   }
 
   _renderFilmsCards() {

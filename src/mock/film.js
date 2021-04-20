@@ -9,6 +9,7 @@ import {
 import {generateComments} from './comment.js';
 import {generateDate} from '../const.js';
 import {generateList} from '../utils/film.js';
+import {nanoid} from 'nanoid';
 
 dayjs.extend(duration);
 
@@ -78,8 +79,6 @@ const AGE_RATINGS = [
 ];
 const DESCRIPTION = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.';
 
-let id = 0;
-
 const generateDescription = () => {
   const description = DESCRIPTION.split('. ');
   const randomLengthDescription = description.slice(0, getRandomInteger(1, 5));
@@ -98,7 +97,7 @@ export const generateFilm = () => {
   const comments = new Array(getRandomInteger(0, MAX_COMMENTS)).fill(null).map(generateComments);
 
   return {
-    id: id++,
+    id: nanoid(),
     comments,
     filmInfo: {
       title,
