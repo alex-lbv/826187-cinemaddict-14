@@ -6,12 +6,9 @@ import FilmListContainerView from '../view/film-list-container.js';
 import {remove, render, RenderPosition} from '../utils/render.js';
 import SiteMenuView from '../view/site-menu.js';
 import LoadMoreButtonView from '../view/load-more-button.js';
-import MovieCardView from '../view/movie-card.js';
-import MovieDetailsView from '../view/movie-details.js';
+import FilmPresenter from './film.js';
 
 const FILM_COUNT_PER_STEP = 5;
-
-const siteBodyElement = document.querySelector('body');
 
 export default class Content {
   constructor(contentContainer) {
@@ -40,32 +37,8 @@ export default class Content {
   }
 
   _renderFilm(film) {
-    const filmComponent = new MovieCardView(film);
-    const filmDetail = new MovieDetailsView(film);
-
-    const onEscKeyDown = (evt) => {
-      if (evt.key === 'Escape' || evt.key === 'Esc') {
-        evt.preventDefault();
-        closeFilmDetail();
-      }
-    };
-
-    const viewFilmDetail = () => {
-      siteBodyElement.appendChild(filmDetail.getElement());
-      siteBodyElement.classList.add('hide-overflow');
-      document.addEventListener('keydown', onEscKeyDown);
-    };
-
-    const closeFilmDetail = () => {
-      siteBodyElement.removeChild(filmDetail.getElement());
-      siteBodyElement.classList.remove('hide-overflow');
-      document.removeEventListener('keydown', onEscKeyDown);
-    };
-
-    filmComponent.setViewClickHandler(viewFilmDetail);
-    filmDetail.setCloseClickHandler(closeFilmDetail);
-
-    render(this._filmListContainerComponent, filmComponent, RenderPosition.BEFOREEND);
+    const filmPresenter = new FilmPresenter(this._filmListContainerComponent);
+    filmPresenter.init(film);
   }
 
   _renderFilms(from, to) {
