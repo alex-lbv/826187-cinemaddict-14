@@ -1,7 +1,6 @@
 import MovieCardView from '../view/movie-card.js';
 import MovieDetailsView from '../view/movie-details.js';
-import {remove, render, RenderPosition} from '../utils/render.js';
-import {replace} from '../utils/common.js';
+import {remove, render, RenderPosition, replace} from '../utils/render.js';
 
 const siteBodyElement = document.querySelector('body');
 

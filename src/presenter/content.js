@@ -7,6 +7,7 @@ import {remove, render, RenderPosition} from '../utils/render.js';
 import SiteMenuView from '../view/site-menu.js';
 import LoadMoreButtonView from '../view/load-more-button.js';
 import FilmPresenter from './film.js';
+import {updateItem} from '../utils/common.js';
 
 const FILM_COUNT_PER_STEP = 5;
 
@@ -22,6 +23,8 @@ export default class Content {
     this._filmListComponent = new FilmListView();
     this._listEmpty = new ListEmptyView();
     this._loadMoreButtonComponent = new LoadMoreButtonView();
+
+    this._handleFimChange = this._handleFimChange.bind(this);
     this._handleLoadMoreButtonClick = this._handleLoadMoreButtonClick.bind(this);
   }
 
@@ -31,6 +34,11 @@ export default class Content {
     this._renderSort();
     render(this._contentContainer, this._contentComponent, RenderPosition.BEFOREEND);
     this._renderContent();
+  }
+
+  _handleFimChange(updatedFilm) {
+    this._films = updateItem(this._films, updatedFilm);
+    this._filmPresenter[updatedFilm.id].init(updatedFilm);
   }
 
   _renderSort() {
