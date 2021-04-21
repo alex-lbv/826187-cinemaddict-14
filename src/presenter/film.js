@@ -2,14 +2,20 @@ import MovieCardView from '../view/movie-card.js';
 import MovieDetailsView from '../view/movie-details.js';
 import {remove, render, RenderPosition, replace} from '../utils/render.js';
 
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  OPENED: 'OPENED',
+};
+
 export default class Film {
   constructor(filmListContainer, changeData, changeMode) {
     this._filmListContainer = filmListContainer;
     this._changeData = changeData;
-    this._changeMode = changeMode;
+    this._closeAllOpenedPopups = changeMode;
 
     this._filmComponent = null;
     this._filmDetail = null;
+    this._mode = Mode.DEFAULT;
 
     this._handleWatchlistClick = this._handleWatchlistClick.bind(this);
     this._handleWatchedClick = this._handleWatchedClick.bind(this);
@@ -43,11 +49,12 @@ export default class Film {
       return;
     }
 
-    if (this._filmListContainer.getElement().contains(prevFilmComponent.getElement())) {
+    if (this._mode === Mode.DEFAULT) {
       replace(this._filmComponent, prevFilmComponent);
     }
 
-    if (this._filmListContainer.getElement().contains(prevFilmDetail.getElement())) {
+    if (this._mode === Mode.OPENED) {
+      replace(this._filmComponent, prevFilmComponent);
       replace(this._filmDetail, prevFilmDetail);
     }
 
@@ -60,16 +67,28 @@ export default class Film {
     remove(this._filmDetail);
   }
 
+  resetView() {
+    if (this._mode === Mode.OPENED) {
+      this._closeFilmDetail();
+    }
+  }
+
   _viewFilmDetail() {
     document.body.appendChild(this._filmDetail.getElement());
     document.body.classList.add('hide-overflow');
     document.addEventListener('keydown', this._escKeyDownHandler);
+    this._mode = Mode.OPENED;
+  }
+
+  _removePopup() {
+    document.body.removeChild(this._filmDetail.getElement());
+    document.removeEventListener('keydown', this._escKeyDownHandler);
   }
 
   _closeFilmDetail() {
-    document.body.removeChild(this._filmDetail.getElement());
+    this._removePopup();
     document.body.classList.remove('hide-overflow');
-    document.removeEventListener('keydown', this._escKeyDownHandler);
+    this._mode = Mode.DEFAULT;
   }
 
   _escKeyDownHandler(evt) {
@@ -80,6 +99,7 @@ export default class Film {
   }
 
   _handleViewClick() {
+    this._closeAllOpenedPopups();
     this._viewFilmDetail();
   }
 
