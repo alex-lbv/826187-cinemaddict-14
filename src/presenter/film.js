@@ -55,11 +55,10 @@ export default class Film {
 
     if (this._mode === Mode.OPENED) {
       replace(this._filmComponent, prevFilmComponent);
-      replace(this._filmDetail, prevFilmDetail);
+      this._filmDetail = prevFilmDetail;
     }
 
     remove(prevFilmComponent);
-    remove(prevFilmDetail);
   }
 
   destroy() {
@@ -80,13 +79,9 @@ export default class Film {
     this._mode = Mode.OPENED;
   }
 
-  _removePopup() {
+  _closeFilmDetail() {
     document.body.removeChild(this._filmDetail.getElement());
     document.removeEventListener('keydown', this._escKeyDownHandler);
-  }
-
-  _closeFilmDetail() {
-    this._removePopup();
     document.body.classList.remove('hide-overflow');
     this._mode = Mode.DEFAULT;
   }

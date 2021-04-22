@@ -193,24 +193,21 @@ export default class MovieDetails extends AbstractView {
     );
   }
 
-  _watchlistClickHandler(evt) {
-    evt.preventDefault();
+  _watchlistClickHandler() {
     this._callback.watchlistClick();
   }
 
-  _watchedClickHandler(evt) {
-    evt.preventDefault();
+  _watchedClickHandler() {
     this._callback.watchedClick();
   }
 
-  _favoritesClickHandler(evt) {
-    evt.preventDefault();
+  _favoritesClickHandler() {
     this._callback.favoritesClick();
   }
 
   _closeClickHandler(evt) {
     evt.preventDefault();
-    this._callback.closeClick();
+    this._callback.closeClick(this._film);
   }
 
   setWatchlistClickHandler(callback) {
