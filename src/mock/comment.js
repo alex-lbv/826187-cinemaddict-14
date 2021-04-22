@@ -1,5 +1,6 @@
 import {generateDate} from '../const.js';
 import {getRandomElementOfArray} from '../utils/common.js';
+import {nanoid} from 'nanoid';
 
 const COMMENTS = [
   'Interesting setting and a good cast' +
@@ -18,11 +19,9 @@ const EMOTIONS_COMMENT = [
   'angry',
 ];
 
-let IdComment = 0;
-
 export const generateComments = () => {
   return {
-    id: IdComment++,
+    id: nanoid(),
     author: getRandomElementOfArray(AUTHORS_COMMENT),
     text: getRandomElementOfArray(COMMENTS),
     date: generateDate(),
