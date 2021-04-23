@@ -13,18 +13,12 @@ import {sortFilmDateUp, sortFilmRatingDown} from '../utils/film.js';
 
 const FILM_COUNT_PER_STEP = 5;
 
-const SortMode = {
-  DEFAULT: 'default',
-  REVERSE: 'reverse',
-};
-
 export default class Content {
   constructor(contentContainer) {
     this._contentContainer = contentContainer;
     this._renderedFilmCount = FILM_COUNT_PER_STEP;
     this._filmPresenter = {};
     this._currentSortType = SortType.DEFAULT;
-    this.sortMode = SortMode.DEFAULT;
 
     this._contentComponent = new ContentView();
     this._sortComponent = new SortView();
@@ -79,7 +73,6 @@ export default class Content {
 
   _handleSortTypeChange(sortType) {
     if (this._currentSortType === sortType) {
-      this._films.sort(sortFilmDateUp);
       return;
     }
 
