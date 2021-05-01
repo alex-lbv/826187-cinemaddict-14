@@ -1,5 +1,15 @@
-import {getDuration, getDate, getCommentDate} from '../const.js';
-import AbstractView from './abstract.js';
+import {getDuration, getDate, getCommentDate, generateDate, EMOTIONS} from '../const.js';
+import SmartView from './smart.js';
+import {nanoid} from 'nanoid';
+import {getRandomElementOfArray} from '../utils/common.js';
+
+let comment = {
+  id: '',
+  author: '',
+  text: '',
+  date: '',
+  emotion: '',
+};
 
 const createFilmGenresList = (genres) => {
   const genresList = Object.values(genres).map((genre) => `<span class="film-details__genre">${genre}</span>`).join('');
@@ -37,15 +47,20 @@ const createFilmComments = (comments) => {
   return `<ul class="film-details__comments-list">${commentsList}</ul>`;
 };
 
-export default class MovieDetails extends AbstractView {
+export default class MovieDetails extends SmartView {
   constructor(film) {
     super();
-    this._film = film;
+    this._data = MovieDetails.parseFilmToData(film);
 
     this._watchlistClickHandler = this._watchlistClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
     this._favoritesClickHandler = this._favoritesClickHandler.bind(this);
     this._closeClickHandler = this._closeClickHandler.bind(this);
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._commentInputHandler = this._commentInputHandler.bind(this);
+    this._smileChangeHandler = this._smileChangeHandler.bind(this);
+
+    this._setInnerHandlers();
   }
 
   getTemplate() {
@@ -73,7 +88,7 @@ export default class MovieDetails extends AbstractView {
         viewed,
         isFavorite,
       },
-    } = this._film;
+    } = this._data;
 
     const active = (condition) => {
       return condition ? 'checked' : '';
@@ -207,7 +222,7 @@ export default class MovieDetails extends AbstractView {
 
   _closeClickHandler(evt) {
     evt.preventDefault();
-    this._callback.closeClick(this._film);
+    this._callback.closeClick();
   }
 
   setWatchlistClickHandler(callback) {
@@ -230,6 +245,108 @@ export default class MovieDetails extends AbstractView {
 
   setCloseClickHandler(callback) {
     this._callback.closeClick = callback;
-    this.getElement().querySelector('.film-details__close-btn').addEventListener('click', this._closeClickHandler);
+    this.getElement().querySelector('.film-details__close-btn')
+      .addEventListener('click', this._closeClickHandler);
+  }
+
+  reset(film) {
+    comment = {
+      id: '',
+      author: '',
+      text: '',
+      date: '',
+      emotion: '',
+    };
+    this.updateData(
+      MovieDetails.parseFilmToData(film),
+    );
+    console.log(this._data.comments);
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setFormSubmitHandler(this._callback.formSubmit);
+  }
+
+  _setInnerHandlers() {
+    this.getElement()
+      .querySelector('.film-details__comment-input')
+      .addEventListener('input', this._commentInputHandler);
+
+    this.getElement()
+      .querySelector('.film-details__emoji-list')
+      .addEventListener('change', this._smileChangeHandler);
+  }
+
+  _commentInputHandler(evt) {
+    evt.preventDefault();
+
+    comment = {...comment, text: evt.target.value};
+
+    // this.updateData({
+    //   description: evt.target.value,
+    // }, true);
+
+    this.updateData({
+      ...this._data,
+      comments: {
+        ...this._data.comments,
+        comment,
+      },
+    }, true);
+    console.log(this._data.comments);
+  }
+
+  _smileChangeHandler(evt) {
+    evt.preventDefault();
+
+    const emojiList = this.getElement().querySelector('.film-details__add-emoji-label');
+
+    if (emojiList.children.length > 0) {
+      emojiList.querySelector('img').remove();
+    }
+
+    const element = document.createElement('img');
+    element.width = 55;
+    element.height = 55;
+    element.alt = `emoji-${evt.target.value}`;
+    element.src = `./images/emoji/${evt.target.value}.png`;
+    this.getElement()
+      .querySelector('.film-details__add-emoji-label')
+      .appendChild(element);
+
+    // this.updateData({
+    //   emotion: evt.target.value,
+    // }, true);
+
+    comment = {...comment, emotion: evt.target.value};
+
+    this.updateData({
+      ...this._data,
+      comments: {
+        ...this._data.comments,
+        comment,
+      },
+    }, true);
+
+    console.log(this._data.comments.comment);
+  }
+
+  _formSubmitHandler(evt) {
+    evt.preventDefault();
+    this._callback.formSubmit(MovieDetails.parseDataToFilm(this._data));
+  }
+
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+    this.getElement().querySelector('form').addEventListener('submit', this._formSubmitHandler);
+  }
+
+  static parseFilmToData(film) {
+    return {...film};
+  }
+
+  static parseDataToFilm(data) {
+    return {...data};
   }
 }

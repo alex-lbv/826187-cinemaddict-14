@@ -80,6 +80,7 @@ export default class Film {
   }
 
   _closeFilmDetail() {
+    this._filmDetail.reset(this._film);
     document.body.removeChild(this._filmDetail.getElement());
     document.removeEventListener('keydown', this._escKeyDownHandler);
     document.body.classList.remove('hide-overflow');
@@ -138,3 +139,7 @@ export default class Film {
     );
   }
 }
+
+/*
+*
+* */

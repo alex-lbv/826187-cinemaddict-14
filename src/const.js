@@ -1,6 +1,13 @@
 import dayjs from 'dayjs';
 import {getRandomInteger} from './utils/common.js';
 
+export const EMOTIONS = [
+  'smile',
+  'sleeping',
+  'puke',
+  'angry',
+];
+
 export const getDuration = (duration, inHours = true) => {
   const totalDurations = dayjs.duration(duration, 'minutes');
   return (inHours) ? totalDurations.hours() : totalDurations.minutes();
