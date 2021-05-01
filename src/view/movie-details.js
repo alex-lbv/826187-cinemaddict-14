@@ -1,7 +1,5 @@
-import {getDuration, getDate, getCommentDate, generateDate, EMOTIONS} from '../const.js';
+import {getDuration, getDate, getCommentDate} from '../const.js';
 import SmartView from './smart.js';
-import {nanoid} from 'nanoid';
-import {getRandomElementOfArray} from '../utils/common.js';
 
 let comment = {
   id: '',
@@ -260,7 +258,7 @@ export default class MovieDetails extends SmartView {
     this.updateData(
       MovieDetails.parseFilmToData(film),
     );
-    console.log(this._data.comments);
+    // console.log(this._data.comments);
   }
 
   restoreHandlers() {
@@ -294,7 +292,7 @@ export default class MovieDetails extends SmartView {
         comment,
       },
     }, true);
-    console.log(this._data.comments);
+    // console.log(this._data.comments);
   }
 
   _smileChangeHandler(evt) {
@@ -329,7 +327,7 @@ export default class MovieDetails extends SmartView {
       },
     }, true);
 
-    console.log(this._data.comments.comment);
+    // console.log(this._data.comments.comment);
   }
 
   _formSubmitHandler(evt) {
