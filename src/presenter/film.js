@@ -29,22 +29,15 @@ export default class Film {
     this._film = film;
 
     const prevFilmComponent = this._filmComponent;
-    const prevFilmDetail = this._filmDetail;
 
     this._filmComponent = new MovieCardView(film);
-    this._filmDetail = new MovieDetailsView(film);
 
     this._filmComponent.setWatchlistClickHandler(this._handleWatchlistClick);
     this._filmComponent.setWatchedClickHandler(this._handleWatchedClick);
     this._filmComponent.setFavoritesClickHandler(this._handleFavoritesClick);
     this._filmComponent.setViewClickHandler(this._handleViewClick);
 
-    this._filmDetail.setWatchlistClickHandler(this._handleWatchlistClick);
-    this._filmDetail.setWatchedClickHandler(this._handleWatchedClick);
-    this._filmDetail.setFavoritesClickHandler(this._handleFavoritesClick);
-    this._filmDetail.setCloseClickHandler(this._handleCloseClick);
-
-    if (prevFilmComponent === null || prevFilmDetail === null) {
+    if (prevFilmComponent === null) {
       render(this._filmListContainer, this._filmComponent, RenderPosition.BEFOREEND);
       return;
     }
@@ -55,7 +48,6 @@ export default class Film {
 
     if (this._mode === Mode.OPENED) {
       replace(this._filmComponent, prevFilmComponent);
-      this._filmDetail = prevFilmDetail;
     }
 
     remove(prevFilmComponent);
@@ -73,6 +65,12 @@ export default class Film {
   }
 
   _viewFilmDetail() {
+    this._filmDetail = new MovieDetailsView(this._film);
+    this._filmDetail.setWatchlistClickHandler(this._handleWatchlistClick);
+    this._filmDetail.setWatchedClickHandler(this._handleWatchedClick);
+    this._filmDetail.setFavoritesClickHandler(this._handleFavoritesClick);
+    this._filmDetail.setCloseClickHandler(this._handleCloseClick);
+
     document.body.appendChild(this._filmDetail.getElement());
     document.body.classList.add('hide-overflow');
     document.addEventListener('keydown', this._escKeyDownHandler);
@@ -80,11 +78,11 @@ export default class Film {
   }
 
   _closeFilmDetail() {
-    this._filmDetail.reset(this._film);
     document.body.removeChild(this._filmDetail.getElement());
     document.removeEventListener('keydown', this._escKeyDownHandler);
     document.body.classList.remove('hide-overflow');
     this._mode = Mode.DEFAULT;
+    this._filmDetail = null;
   }
 
   _escKeyDownHandler(evt) {
@@ -139,7 +137,3 @@ export default class Film {
     );
   }
 }
-
-/*
-*
-* */

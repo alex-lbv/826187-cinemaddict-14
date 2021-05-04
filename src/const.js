@@ -8,6 +8,14 @@ export const EMOTIONS = [
   'angry',
 ];
 
+export const FRESH_COMMENT = {
+  id: '',
+  author: '',
+  text: '',
+  date: '',
+  emotion: '',
+};
+
 export const getDuration = (duration, inHours = true) => {
   const totalDurations = dayjs.duration(duration, 'minutes');
   return (inHours) ? totalDurations.hours() : totalDurations.minutes();

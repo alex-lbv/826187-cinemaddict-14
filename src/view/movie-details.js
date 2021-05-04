@@ -1,13 +1,5 @@
-import {getDuration, getDate, getCommentDate} from '../const.js';
+import {getDuration, getDate, getCommentDate, FRESH_COMMENT} from '../const.js';
 import SmartView from './smart.js';
-
-let comment = {
-  id: '',
-  author: '',
-  text: '',
-  date: '',
-  emotion: '',
-};
 
 const createFilmGenresList = (genres) => {
   const genresList = Object.values(genres).map((genre) => `<span class="film-details__genre">${genre}</span>`).join('');
@@ -49,6 +41,7 @@ export default class MovieDetails extends SmartView {
   constructor(film) {
     super();
     this._data = MovieDetails.parseFilmToData(film);
+    this._comment = {...FRESH_COMMENT};
 
     this._watchlistClickHandler = this._watchlistClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
@@ -248,7 +241,7 @@ export default class MovieDetails extends SmartView {
   }
 
   reset(film) {
-    comment = {
+    this._comment = {
       id: '',
       author: '',
       text: '',
@@ -257,8 +250,8 @@ export default class MovieDetails extends SmartView {
     };
     this.updateData(
       MovieDetails.parseFilmToData(film),
+      true,
     );
-    // console.log(this._data.comments);
   }
 
   restoreHandlers() {
@@ -279,20 +272,15 @@ export default class MovieDetails extends SmartView {
   _commentInputHandler(evt) {
     evt.preventDefault();
 
-    comment = {...comment, text: evt.target.value};
-
-    // this.updateData({
-    //   description: evt.target.value,
-    // }, true);
+    this._comment = {...this._comment, text: evt.target.value};
 
     this.updateData({
       ...this._data,
       comments: {
         ...this._data.comments,
-        comment,
+        comment: this._comment,
       },
     }, true);
-    // console.log(this._data.comments);
   }
 
   _smileChangeHandler(evt) {
@@ -313,21 +301,15 @@ export default class MovieDetails extends SmartView {
       .querySelector('.film-details__add-emoji-label')
       .appendChild(element);
 
-    // this.updateData({
-    //   emotion: evt.target.value,
-    // }, true);
-
-    comment = {...comment, emotion: evt.target.value};
+    this._comment = {...this._comment, emotion: evt.target.value};
 
     this.updateData({
       ...this._data,
       comments: {
         ...this._data.comments,
-        comment,
+        comment: this._comment,
       },
     }, true);
-
-    // console.log(this._data.comments.comment);
   }
 
   _formSubmitHandler(evt) {
