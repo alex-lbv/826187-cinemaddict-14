@@ -240,20 +240,6 @@ export default class MovieDetails extends SmartView {
       .addEventListener('click', this._closeClickHandler);
   }
 
-  reset(film) {
-    this._comment = {
-      id: '',
-      author: '',
-      text: '',
-      date: '',
-      emotion: '',
-    };
-    this.updateData(
-      MovieDetails.parseFilmToData(film),
-      true,
-    );
-  }
-
   restoreHandlers() {
     this._setInnerHandlers();
     this.setFormSubmitHandler(this._callback.formSubmit);
@@ -290,16 +276,19 @@ export default class MovieDetails extends SmartView {
 
     if (emojiList.children.length > 0) {
       emojiList.querySelector('img').remove();
+      emojiList.querySelector('input').remove();
     }
-
+    const elementHiddenInput = document.createElement('input');
+    elementHiddenInput.type = 'hidden';
+    elementHiddenInput.value = evt.target.value;
     const element = document.createElement('img');
     element.width = 55;
     element.height = 55;
     element.alt = `emoji-${evt.target.value}`;
     element.src = `./images/emoji/${evt.target.value}.png`;
-    this.getElement()
-      .querySelector('.film-details__add-emoji-label')
-      .appendChild(element);
+    const label = this.getElement().querySelector('.film-details__add-emoji-label');
+    label.appendChild(elementHiddenInput);
+    label.appendChild(element);
 
     this._comment = {...this._comment, emotion: evt.target.value};
 
