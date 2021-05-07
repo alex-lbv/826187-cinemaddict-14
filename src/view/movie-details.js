@@ -160,9 +160,7 @@ export default class MovieDetails extends SmartView {
             <div class="film-details__bottom-container">
             <section class="film-details__comments-wrap">
               <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
-
               ${createFilmComments(comments)}
-
               <div class="film-details__new-comment">
                 <div class="film-details__add-emoji-label"></div>
 
