@@ -54,8 +54,16 @@ export default class Film {
   }
 
   destroy() {
+    // TODO: если Вставить это - то всё ок
+    // this._filmDetail = new MovieDetailsView(this._film);
+    // this._filmDetail.setWatchlistClickHandler(this._handleWatchlistClick);
+    // this._filmDetail.setWatchedClickHandler(this._handleWatchedClick);
+    // this._filmDetail.setFavoritesClickHandler(this._handleFavoritesClick);
+    // this._filmDetail.setCloseClickHandler(this._handleCloseClick);
+
     remove(this._filmComponent);
-    remove(this._filmDetail);
+    // TODO: если раскомментировать, то сортировка перестаёт работать
+    // remove(this._filmDetail);
   }
 
   resetView() {
