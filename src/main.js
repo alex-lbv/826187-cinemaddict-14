@@ -5,6 +5,7 @@ import UserRankView from './view/user-rank.js';
 import FooterStatisticsView from './view/footer-statistics.js';
 import ContentPresenter from './presenter/content.js';
 import MoviesModel from './model/movies.js';
+import SiteMenuView from './view/site-menu.js';
 
 const FILM_COUNT = 20;
 
@@ -20,9 +21,11 @@ const siteHeaderElement = siteBodyElement.querySelector('.header');
 const siteFooterElement = siteBodyElement.querySelector('.footer');
 const footerStatistics = siteFooterElement.querySelector('.footer__statistics');
 
+render(siteMainElement, new SiteMenuView(filters), RenderPosition.AFTERBEGIN);
 // const contentPresenter = new ContentPresenter(siteMainElement);
 const contentPresenter = new ContentPresenter(siteMainElement, filmsModel);
 
 render(siteHeaderElement, new UserRankView(filters[2]), RenderPosition.BEFOREEND);
 render(footerStatistics, new FooterStatisticsView(filters[0]), RenderPosition.BEFOREEND);
-contentPresenter.init(films,filters);
+// contentPresenter.init(films,filters);
+contentPresenter.init();
