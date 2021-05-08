@@ -14,7 +14,8 @@ import {sortFilmDateUp, sortFilmRatingDown} from '../utils/film.js';
 const FILM_COUNT_PER_STEP = 5;
 
 export default class Content {
-  constructor(contentContainer) {
+  constructor(contentContainer, filmsModel) {
+    this._filmsModel = filmsModel;
     this._contentContainer = contentContainer;
     this._renderedFilmCount = FILM_COUNT_PER_STEP;
     this._filmPresenter = {};
@@ -42,6 +43,10 @@ export default class Content {
     render(this._contentContainer, this._contentComponent, RenderPosition.BEFOREEND);
 
     this._renderContent();
+  }
+
+  _getFilms() {
+    return this._filmsModel.getFilms();
   }
 
   _handleModeChange() {
