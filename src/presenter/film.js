@@ -1,6 +1,7 @@
 import MovieCardView from '../view/movie-card.js';
 import MovieDetailsView from '../view/movie-details.js';
 import {remove, render, RenderPosition, replace} from '../utils/render.js';
+import {UpdateType, UserAction} from '../const.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -111,6 +112,8 @@ export default class Film {
 
   _handleFavoritesClick() {
     this._changeData(
+      UserAction.UPDATE_FILM,
+      UpdateType.MINOR,
       {
         ...this._film,
         userDetails: {
@@ -123,6 +126,8 @@ export default class Film {
 
   _handleWatchlistClick() {
     this._changeData(
+      UserAction.UPDATE_FILM,
+      UpdateType.MINOR,
       {
         ...this._film,
         userDetails: {
@@ -135,6 +140,8 @@ export default class Film {
 
   _handleWatchedClick() {
     this._changeData(
+      UserAction.UPDATE_FILM,
+      UpdateType.MINOR,
       {
         ...this._film,
         userDetails: {

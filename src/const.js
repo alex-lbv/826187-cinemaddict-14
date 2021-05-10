@@ -16,6 +16,18 @@ export const FRESH_COMMENT = {
   emotion: '',
 };
 
+export const UserAction = {
+  UPDATE_FILM: 'UPDATE_FILM',
+  ADD_FILM: 'ADD_FILM',
+  DELETE_FILM: 'DELETE_FILM',
+};
+
+export const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
+
 export const getDuration = (duration, inHours = true) => {
   const totalDurations = dayjs.duration(duration, 'minutes');
   return (inHours) ? totalDurations.hours() : totalDurations.minutes();
