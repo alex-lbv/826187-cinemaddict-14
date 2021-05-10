@@ -6,6 +6,7 @@ import FooterStatisticsView from './view/footer-statistics.js';
 import ContentPresenter from './presenter/content.js';
 import MoviesModel from './model/movies.js';
 import SiteMenuView from './view/site-menu.js';
+import FilterModel from './model/filter.js';
 
 const FILM_COUNT = 20;
 
@@ -14,6 +15,8 @@ const filters = generateFilter(films);
 
 const filmsModel = new MoviesModel();
 filmsModel.setMovies(films);
+
+const filterModel = new FilterModel();
 
 const siteBodyElement = document.querySelector('body');
 const siteMainElement = siteBodyElement.querySelector('.main');
