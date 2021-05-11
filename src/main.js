@@ -7,11 +7,34 @@ import ContentPresenter from './presenter/content.js';
 import MoviesModel from './model/movies.js';
 import SiteMenuView from './view/site-menu.js';
 import FilterModel from './model/filter.js';
+import Filter from './presenter/filter.js';
 
 const FILM_COUNT = 20;
 
 const films = new Array(FILM_COUNT).fill(null).map(generateFilm);
-const filters = generateFilter(films);
+// const filters = generateFilter(films);
+// const filters = [
+//   {
+//     type: 'all',
+//     name: 'All',
+//     count: 0,
+//   },
+//   {
+//     type: 'watchlist',
+//     name: 'Watchlist',
+//     count: 2,
+//   },
+//   {
+//     type: 'history',
+//     name: 'History',
+//     count: 33,
+//   },
+//   {
+//     type: 'favorites',
+//     name: 'Favorites',
+//     count: 1,
+//   },
+// ];
 
 const filmsModel = new MoviesModel();
 filmsModel.setMovies(films);
@@ -20,14 +43,16 @@ const filterModel = new FilterModel();
 
 const siteBodyElement = document.querySelector('body');
 const siteMainElement = siteBodyElement.querySelector('.main');
-const siteHeaderElement = siteBodyElement.querySelector('.header');
-const siteFooterElement = siteBodyElement.querySelector('.footer');
-const footerStatistics = siteFooterElement.querySelector('.footer__statistics');
+// const siteHeaderElement = siteBodyElement.querySelector('.header');
+// const siteFooterElement = siteBodyElement.querySelector('.footer');
+// const footerStatistics = siteFooterElement.querySelector('.footer__statistics');
 
-render(siteMainElement, new SiteMenuView(filters), RenderPosition.AFTERBEGIN);
+// render(siteMainElement, new SiteMenuView(filters,'all'), RenderPosition.AFTERBEGIN);
+const filterPresenter = new Filter(siteMainElement, filterModel, filmsModel);
 const contentPresenter = new ContentPresenter(siteMainElement, filmsModel);
 
-render(siteHeaderElement, new UserRankView(filters), RenderPosition.BEFOREEND);
-render(footerStatistics, new FooterStatisticsView(filters), RenderPosition.BEFOREEND);
-
+//TODO: не работает пока делаю фильтры
+// render(siteHeaderElement, new UserRankView(filters), RenderPosition.BEFOREEND);
+// render(footerStatistics, new FooterStatisticsView(filters), RenderPosition.BEFOREEND);
+filterPresenter.init();
 contentPresenter.init();
