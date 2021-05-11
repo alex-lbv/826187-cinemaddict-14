@@ -1,10 +1,11 @@
 import AbstractView from './abstract.js';
 import {numberInRange} from '../utils/common.js';
+import {FilterOrder} from '../const.js';
 
 export default class UserRank extends AbstractView {
   constructor(filter) {
     super();
-    this._filter = filter;
+    this._filter = filter[FilterOrder.HISTORY];
   }
 
   getTemplate() {

@@ -27,6 +27,7 @@ const footerStatistics = siteFooterElement.querySelector('.footer__statistics');
 render(siteMainElement, new SiteMenuView(filters), RenderPosition.AFTERBEGIN);
 const contentPresenter = new ContentPresenter(siteMainElement, filmsModel);
 
-render(siteHeaderElement, new UserRankView(filters[2]), RenderPosition.BEFOREEND);
-render(footerStatistics, new FooterStatisticsView(filters[0]), RenderPosition.BEFOREEND);
+render(siteHeaderElement, new UserRankView(filters), RenderPosition.BEFOREEND);
+render(footerStatistics, new FooterStatisticsView(filters), RenderPosition.BEFOREEND);
+
 contentPresenter.init();

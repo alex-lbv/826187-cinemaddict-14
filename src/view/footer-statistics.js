@@ -1,9 +1,11 @@
 import AbstractView from './abstract.js';
+import {FilterOrder} from '../const.js';
 
 export default class FooterStatistics extends AbstractView {
   constructor(filter) {
     super();
-    this._filter = filter;
+
+    this._filter = filter[FilterOrder.ALL];
   }
 
   getTemplate() {

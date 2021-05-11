@@ -60,3 +60,10 @@ export const FilterType = {
   HISTORY: 'history',
   FAVORITES: 'favorites',
 };
+
+export const FilterOrder = {
+  ALL: 0,
+  WATCHLIST: 1,
+  HISTORY: 2,
+  FAVORITES: 3,
+};
