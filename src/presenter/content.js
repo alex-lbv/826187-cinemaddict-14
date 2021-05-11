@@ -8,12 +8,14 @@ import LoadMoreButtonView from '../view/load-more-button.js';
 import FilmPresenter from './film.js';
 import {SortType, UpdateType, UserAction} from '../const.js';
 import {sortFilmDateUp, sortFilmRatingDown} from '../utils/film.js';
+import {filter} from '../utils/filter.js';
 
 const FILM_COUNT_PER_STEP = 5;
 
 export default class Content {
-  constructor(contentContainer, filmsModel) {
+  constructor(contentContainer, filmsModel, filterModel) {
     this._filmsModel = filmsModel;
+    this._filterModel = filterModel;
     this._contentContainer = contentContainer;
     this._renderedFilmCount = FILM_COUNT_PER_STEP;
     this._filmPresenter = {};
@@ -32,7 +34,9 @@ export default class Content {
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleLoadMoreButtonClick = this._handleLoadMoreButtonClick.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+
     this._filmsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   init() {
@@ -40,14 +44,18 @@ export default class Content {
   }
 
   _getFilms() {
+    const filterType = this._filterModel.getFilter();
+    const films = this._filmsModel.getMovies();
+    const filteredFilms = filter[filterType](films);
+
     switch (this._currentSortType) {
       case SortType.DATE:
-        return this._filmsModel.getMovies().slice().sort(sortFilmDateUp);
+        return filteredFilms.sort(sortFilmDateUp);
       case SortType.RATING:
-        return this._filmsModel.getMovies().slice().sort(sortFilmRatingDown);
+        return filteredFilms.sort(sortFilmRatingDown);
     }
 
-    return this._filmsModel.getMovies();
+    return filteredFilms;
   }
 
   _handleModeChange() {

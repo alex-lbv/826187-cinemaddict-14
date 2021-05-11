@@ -5,16 +5,16 @@ import {filter} from '../utils/filter.js';
 import UserRankView from '../view/user-rank.js';
 import FooterStatisticsView from '../view/footer-statistics.js';
 
-const siteBodyElement = document.querySelector('body');
-const siteHeaderElement = siteBodyElement.querySelector('.header');
-const siteFooterElement = siteBodyElement.querySelector('.footer');
-const footerStatistics = siteFooterElement.querySelector('.footer__statistics');
+const siteHeaderElement = document.querySelector('.header');
+const footerStatistics = document.querySelector('.footer__statistics');
 
 export default class Filter {
   constructor(filterContainer, filterModel, movieModel) {
     this._filterContainer = filterContainer;
     this._filterModel = filterModel;
     this._movieModel = movieModel;
+    this._userRankContainer = siteHeaderElement;
+    this._footerStatisticsContainer = footerStatistics;
 
     this._filterComponent = null;
     this._userRank = null;
@@ -30,6 +30,7 @@ export default class Filter {
   init() {
     const filters = this._getFilters();
     const prevFilterComponent = this._filterComponent;
+    const prevUserRank = this._userRank;
 
     this._filterComponent = new SiteMenuView(filters, this._filterModel.getFilter());
     this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
@@ -38,19 +39,16 @@ export default class Filter {
     this._userRank.setFilterTypeChangeHandler(this._handleFilterTypeChange);
 
     this._footerStatistics = new FooterStatisticsView(filters, this._filterModel.getFilter());
-    this._footerStatistics.setFilterTypeChangeHandler(this._handleFilterTypeChange);
 
     if (prevFilterComponent === null) {
       render(this._filterContainer, this._filterComponent, RenderPosition.BEFOREEND);
-      render(footerStatistics, this._footerStatistics, RenderPosition.BEFOREEND);
-      render(siteHeaderElement, this._userRank, RenderPosition.BEFOREEND);
+      render(this._userRankContainer, this._userRank, RenderPosition.BEFOREEND);
+      render(this._footerStatisticsContainer, this._footerStatistics, RenderPosition.BEFOREEND);
       return;
     }
 
-    // render(siteHeaderElement, this._userRank, RenderPosition.BEFOREEND);
-
-    replace(this._footerStatistics, this._footerStatistics);
     replace(this._filterComponent, prevFilterComponent);
+    replace(this._userRank, prevUserRank);
     remove(prevFilterComponent);
   }
 

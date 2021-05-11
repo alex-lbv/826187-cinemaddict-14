@@ -24,7 +24,7 @@ export default class UserRank extends AbstractView {
       },
       'fan': {
         MIN: 11,
-        MAX: 20,
+        MAX: 19,
       },
       'movie buff': {
         MIN: 20,
@@ -45,12 +45,20 @@ export default class UserRank extends AbstractView {
   }
 
   _filterTypeChangeHandler(evt) {
+    if (evt.target.tagName !== 'A') {
+      return;
+    }
+
     evt.preventDefault();
-    this._callback.filterTypeChange(evt.target.value);
+    this._callback.filterTypeChange(evt.target.dataset.filterType);
   }
 
   setFilterTypeChangeHandler(callback) {
     this._callback.filterTypeChange = callback;
-    this.getElement().addEventListener('change', this._filterTypeChangeHandler);
+
+    setTimeout(() => {
+      document.querySelectorAll('.main-navigation__item')[2]
+        .addEventListener('change', this._filterTypeChangeHandler);
+    }, 0);
   }
 }
