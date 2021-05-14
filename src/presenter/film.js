@@ -9,7 +9,8 @@ const Mode = {
 };
 
 export default class Film {
-  constructor(filmListContainer, changeData, changeMode) {
+  constructor(filmListContainer, changeData, changeMode, commentsModel) {
+    this._commentsModel = commentsModel;
     this._filmListContainer = filmListContainer;
     this._changeData = changeData;
     this._closeAllOpenedPopups = changeMode;
@@ -28,6 +29,7 @@ export default class Film {
 
   init(film) {
     this._film = film;
+    this._filmComments = this._commentsModel.getComments(film.comments);
 
     const prevFilmComponent = this._filmComponent;
 
@@ -74,7 +76,7 @@ export default class Film {
   }
 
   _viewFilmDetail() {
-    this._filmDetail = new MovieDetailsView(this._film);
+    this._filmDetail = new MovieDetailsView(this._film, this._filmComments);
     this._filmDetail.setWatchlistClickHandler(this._handleWatchlistClick);
     this._filmDetail.setWatchedClickHandler(this._handleWatchedClick);
     this._filmDetail.setFavoritesClickHandler(this._handleFavoritesClick);

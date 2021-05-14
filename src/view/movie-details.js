@@ -38,9 +38,10 @@ const createFilmComments = (comments) => {
 };
 
 export default class MovieDetails extends SmartView {
-  constructor(film) {
+  constructor(film, comments) {
     super();
     this._data = MovieDetails.parseFilmToData(film);
+    this._comments = comments;
     this._comment = {...FRESH_COMMENT};
 
     this._watchlistClickHandler = this._watchlistClickHandler.bind(this);
@@ -160,7 +161,7 @@ export default class MovieDetails extends SmartView {
             <div class="film-details__bottom-container">
             <section class="film-details__comments-wrap">
               <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
-              ${createFilmComments(comments)}
+              ${createFilmComments(this._comments)}
               <div class="film-details__new-comment">
                 <div class="film-details__add-emoji-label"></div>
 

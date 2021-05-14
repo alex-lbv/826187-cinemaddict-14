@@ -13,8 +13,9 @@ import {filter} from '../utils/filter.js';
 const FILM_COUNT_PER_STEP = 5;
 
 export default class Content {
-  constructor(contentContainer, filmsModel, filterModel) {
+  constructor(contentContainer, filmsModel, filterModel, commentsModel) {
     this._filmsModel = filmsModel;
+    this._commentsModel = commentsModel;
     this._filterModel = filterModel;
     this._contentContainer = contentContainer;
     this._renderedFilmCount = FILM_COUNT_PER_STEP;
@@ -115,7 +116,7 @@ export default class Content {
   }
 
   _renderFilm(film) {
-    const filmPresenter = new FilmPresenter(this._filmListContainerComponent, this._handleViewAction, this._handleModeChange);
+    const filmPresenter = new FilmPresenter(this._filmListContainerComponent, this._handleViewAction, this._handleModeChange, this._commentsModel);
     filmPresenter.init(film);
     this._filmPresenter[film.id] = filmPresenter;
   }

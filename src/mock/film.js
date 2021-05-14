@@ -85,7 +85,7 @@ const generateDescription = () => {
   return getRandomLengthArray(randomLengthDescription).join('. ');
 };
 
-export const generateFilm = () => {
+export const generateFilm = (commentsIds) => {
   const title = getRandomElementOfArray(TITLES);
   const description = generateDescription();
   let shortDescription;
@@ -94,11 +94,11 @@ export const generateFilm = () => {
     ? shortDescription = `${description.substring(0, MAX_LENGTH_SHORT_DESCRIPTION)}...`
     : shortDescription = description;
 
-  const comments = new Array(getRandomInteger(0, MAX_COMMENTS)).fill(null).map(generateComments);
+  //const comments = new Array(getRandomInteger(0, MAX_COMMENTS)).fill(null).map(generateComments);
 
   return {
     id: nanoid(),
-    comments,
+    comments: commentsIds,
     filmInfo: {
       title,
       originalFilmTitle: title,
