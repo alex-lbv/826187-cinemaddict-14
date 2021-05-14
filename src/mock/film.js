@@ -6,7 +6,6 @@ import {
   getRandomInteger,
   getRandomLengthArray
 } from '../utils/common.js';
-import {generateComments} from './comment.js';
 import {generateDate} from '../const.js';
 import {generateList} from '../utils/film.js';
 import {nanoid} from 'nanoid';
@@ -14,7 +13,6 @@ import {nanoid} from 'nanoid';
 dayjs.extend(duration);
 
 const MAX_LENGTH_SHORT_DESCRIPTION = 140;
-const MAX_COMMENTS = 5;
 const MIN_DURATION = 30;
 const MAX_DURATION = 220;
 const MIN_RATING = 0;
@@ -93,8 +91,6 @@ export const generateFilm = (commentsIds) => {
   (description.length > MAX_LENGTH_SHORT_DESCRIPTION)
     ? shortDescription = `${description.substring(0, MAX_LENGTH_SHORT_DESCRIPTION)}...`
     : shortDescription = description;
-
-  //const comments = new Array(getRandomInteger(0, MAX_COMMENTS)).fill(null).map(generateComments);
 
   return {
     id: nanoid(),
