@@ -25,6 +25,7 @@ export default class Film {
     this._handleViewClick = this._handleViewClick.bind(this);
     this._handleCloseClick = this._handleCloseClick.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
+    this._handleDeleteClick = this._handleDeleteClick.bind(this);
   }
 
   init(film) {
@@ -75,12 +76,34 @@ export default class Film {
     }
   }
 
+  updateFilmDetail(updateType, data) {
+    if (this._filmDetail === null || data.id !== this._film.id) {
+      return;
+    }
+
+    if (updateType === UpdateType.PATCH) {
+      const newComments = this._commentsModel.getComments(data.comments);
+      this._filmDetail.updateComments(newComments);
+
+
+      if (newComments.length > this._filmComments.length) {
+        this._filmDetail.resetState(this._film);
+      }
+
+      this._filmComments = newComments;
+    }
+
+    this._film = data;
+    this._filmDetail.updateData(data);
+  }
+
   _viewFilmDetail() {
     this._filmDetail = new MovieDetailsView(this._film, this._filmComments);
     this._filmDetail.setWatchlistClickHandler(this._handleWatchlistClick);
     this._filmDetail.setWatchedClickHandler(this._handleWatchedClick);
     this._filmDetail.setFavoritesClickHandler(this._handleFavoritesClick);
     this._filmDetail.setCloseClickHandler(this._handleCloseClick);
+    this._filmDetail.setDeleteClickHandler(this._handleDeleteClick);
 
     document.body.appendChild(this._filmDetail.getElement());
     document.body.classList.add('hide-overflow');
@@ -151,6 +174,20 @@ export default class Film {
           viewed: !this._film.userDetails.viewed,
         },
       },
+    );
+  }
+
+  _handleDeleteClick(comment) {
+    const deletedComment =
+      {
+        filmId: this._film.id,
+        id: comment,
+      };
+
+    this._changeData(
+      UserAction.DELETE_COMMENT,
+      UpdateType.PATCH,
+      deletedComment,
     );
   }
 }

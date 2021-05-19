@@ -37,6 +37,7 @@ export default class Content {
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
 
     this._filmsModel.addObserver(this._handleModelEvent);
+    this._commentsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
   }
 
@@ -70,11 +71,11 @@ export default class Content {
       case UserAction.UPDATE_FILM:
         this._filmsModel.updateMovie(updateType, update);
         break;
-      case UserAction.ADD_FILM:
+      case UserAction.ADD_COMMENT:
         this._filmsModel.addMovie(updateType, update);
         break;
-      case UserAction.DELETE_FILM:
-        this._filmsModel.deleteMovie(updateType, update);
+      case UserAction.DELETE_COMMENT:
+        this._commentsModel.deleteComment(updateType, update);
         break;
     }
   }
@@ -93,6 +94,8 @@ export default class Content {
         this._renderContent();
         break;
     }
+
+    this._filmPresenter[data.id].updateFilmDetail(updateType, data);
   }
 
   _handleSortTypeChange(sortType) {
@@ -159,26 +162,6 @@ export default class Content {
     this._loadMoreButtonComponent = new LoadMoreButtonView();
     this._loadMoreButtonComponent.setClickHandler(this._handleLoadMoreButtonClick);
     render(this._filmListComponent, this._loadMoreButtonComponent, RenderPosition.BEFOREEND);
-  }
-
-  _clearFilmList() {
-    Object
-      .values(this._filmPresenter)
-      .forEach((presenter) => presenter.destroy());
-    this._filmPresenter = {};
-    this._renderedFilmCount = FILM_COUNT_PER_STEP;
-    remove(this._loadMoreButtonComponent);
-  }
-
-  _renderFilmsCards() {
-    const filmCount = this._getFilms().length;
-    const films = this._getFilms().slice(0, Math.min(filmCount, FILM_COUNT_PER_STEP));
-
-    this._renderFilms(films);
-
-    if (filmCount > FILM_COUNT_PER_STEP) {
-      this._renderLoadMoreButton();
-    }
   }
 
   _clearContent({resetRenderedFilmCount = false, resetSortType = false} = {}) {

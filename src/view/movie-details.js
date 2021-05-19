@@ -15,7 +15,7 @@ const createFilmGenresList = (genres) => {
 
 const createFilmComments = (comments) => {
   const commentsList = Object.values(comments).map((comment) => {
-    const {author, date, text, emotion} = comment;
+    const {id, author, date, text, emotion} = comment;
 
     return (
       `<li class="film-details__comment">
@@ -27,7 +27,7 @@ const createFilmComments = (comments) => {
               <p class="film-details__comment-info">
                 <span class="film-details__comment-author">${author}</span>
                 <span class="film-details__comment-day">${getCommentDate(date)}</span>
-                <button class="film-details__comment-delete">Delete</button>
+                <button class="film-details__comment-delete" data-comment-id="${id}">Delete</button>
               </p>
             </div>
           </li>`
@@ -51,8 +51,21 @@ export default class MovieDetails extends SmartView {
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._commentInputHandler = this._commentInputHandler.bind(this);
     this._smileChangeHandler = this._smileChangeHandler.bind(this);
+    this._commentDeleteClickHandler = this._commentDeleteClickHandler.bind(this);
 
     this._setInnerHandlers();
+  }
+
+  _commentDeleteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.deleteClick(evt.target.dataset.commentId);
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelectorAll('.film-details__comment-delete')
+      .forEach((button) => button
+        .addEventListener('click', this._commentDeleteClickHandler));
   }
 
   getTemplate() {
@@ -241,7 +254,11 @@ export default class MovieDetails extends SmartView {
 
   restoreHandlers() {
     this._setInnerHandlers();
+    this._watchedClickHandler(this._callback.watchedClick);
+    this._watchlistClickHandler(this._callback.watchlistClick);
+    this._favoritesClickHandler(this._callback.favoritesClick);
     this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setDeleteClickHandler(this._callback.deleteClick);
   }
 
   _setInnerHandlers() {
@@ -308,6 +325,17 @@ export default class MovieDetails extends SmartView {
   setFormSubmitHandler(callback) {
     this._callback.formSubmit = callback;
     this.getElement().querySelector('form').addEventListener('submit', this._formSubmitHandler);
+  }
+
+  updateComments(newComments) {
+    this._comments = newComments;
+  }
+
+  resetState(data) {
+    this.updateData(
+      this._data = data,
+      true,
+    );
   }
 
   static parseFilmToData(film) {

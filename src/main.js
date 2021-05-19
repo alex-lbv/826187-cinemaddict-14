@@ -32,7 +32,11 @@ const films = new Array(FILM_COUNT).fill(null).map(() => {
 const filmsModel = new MoviesModel();
 filmsModel.setMovies(films);
 
-const commentsModel = new CommentsModel();
+const removeCommentFromFilm = (updateType, removedComment) => {
+  filmsModel.removeComment(updateType, removedComment);
+};
+
+const commentsModel = new CommentsModel(removeCommentFromFilm);
 commentsModel.setComments(commentsList);
 
 const filterModel = new FilterModel();
