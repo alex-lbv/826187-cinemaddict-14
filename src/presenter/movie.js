@@ -174,6 +174,5 @@ export default class Movie {
   }
 
   _commentAddHandler() {
-    console.log('comment Adds');
   }
 }
