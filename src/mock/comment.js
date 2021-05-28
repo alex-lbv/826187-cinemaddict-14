@@ -1,6 +1,13 @@
-import {EMOTIONS, generateDate} from '../const.js';
-import {getRandomElementOfArray} from '../utils/common.js';
 import {nanoid} from 'nanoid';
+import {getRandomElementOfArray} from '../utils/common.js';
+import {generateDate} from '../utils/date-time.js';
+
+const EMOTIONS = [
+  'smile',
+  'sleeping',
+  'puke',
+  'angry',
+];
 
 const COMMENTS = [
   'Interesting setting and a good cast' +
@@ -13,7 +20,7 @@ const AUTHORS_COMMENT = [
   'John Doe',
 ];
 
-export const generateComments = () => {
+export const generateComment = () => {
   return {
     id: nanoid(),
     author: getRandomElementOfArray(AUTHORS_COMMENT),

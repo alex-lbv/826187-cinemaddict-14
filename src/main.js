@@ -1,23 +1,27 @@
-import {render, RenderPosition} from './utils/render.js';
-import {generateFilm} from './mock/film.js';
-import {generateFilter} from './mock/filter.js';
 import UserRankView from './view/user-rank.js';
-import FooterStatisticsView from './view/footer-statistics.js';
-import ContentPresenter from './presenter/content.js';
+import {generateMovie} from './mock/movie.js';
+import {render} from './utils/render.js';
+import {defineUserRank} from './utils/movie.js';
+import MovieList from './presenter/movie-list.js';
+import MoviesModel from './model/movies.js';
+import FilterModel from './model/filter.js';
+import FilterPresenter from './presenter/filter.js';
 
-const FILM_COUNT = 20;
+const MOVIE_COUNT = 15;
 
-const films = new Array(FILM_COUNT).fill(null).map(generateFilm);
-const filters = generateFilter(films);
+const movies = new Array(MOVIE_COUNT).fill().map(generateMovie);
 
-const siteBodyElement = document.querySelector('body');
-const siteMainElement = siteBodyElement.querySelector('.main');
-const siteHeaderElement = siteBodyElement.querySelector('.header');
-const siteFooterElement = siteBodyElement.querySelector('.footer');
-const footerStatistics = siteFooterElement.querySelector('.footer__statistics');
+const moviesModel = new MoviesModel();
+moviesModel.setMovies(movies);
 
-const contentPresenter = new ContentPresenter(siteMainElement);
+const filterModel = new FilterModel();
 
-render(siteHeaderElement, new UserRankView(filters[2]), RenderPosition.BEFOREEND);
-render(footerStatistics, new FooterStatisticsView(filters[0]), RenderPosition.BEFOREEND);
-contentPresenter.init(films,filters);
+const siteHeaderElement = document.querySelector('.header');
+const siteMainElement = document.querySelector('.main');
+
+const movieListPresenter = new MovieList(siteMainElement, moviesModel, filterModel);
+const filterPresenter = new FilterPresenter(siteMainElement, filterModel, moviesModel);
+
+render(siteHeaderElement, new UserRankView(defineUserRank(movies)));
+filterPresenter.init();
+movieListPresenter.init();
