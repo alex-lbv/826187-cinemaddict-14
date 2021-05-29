@@ -1,8 +1,8 @@
 import AbstractView from './abstract.js';
-import {FilterType} from '../const.js';
+import {FilterType, MenuItem} from '../const.js';
 
-const createFilterItemTemplate = (filters, currentFilterType) => {
-  const {type, name, count} = filters;
+const createFilterItemTemplate = (filter, currentFilterType, currentMenuSection) => {
+  const {type, name, count} = filter;
 
   let dataFilterType = '';
   switch (name) {
@@ -20,16 +20,16 @@ const createFilterItemTemplate = (filters, currentFilterType) => {
       break;
   }
 
-  const counter = name !== FilterType.ALL ? `<span class="main-navigation__item-count">${count}</span>` : '';
+  const counter = name !== FilterType.ALL ? ` <span class="main-navigation__item-count">${count}</span>` : '';
 
   return (`<a href="#${name}"
-         class="main-navigation__item${type === currentFilterType ? ' main-navigation__item--active' : ''}"
-         data-filter-type="${dataFilterType}">${name} ${counter}</a>`);
+         class="main-navigation__item${type === currentFilterType && currentMenuSection === MenuItem.MOVIES ? ' main-navigation__item--active' : ''}"
+         data-filter-type="${dataFilterType}">${name}${counter}</a>`);
 };
 
-const createFilterTemplate = (filterItems, currentFilterType) => {
+const createSiteMenuTemplate = (filterItems, currentFilterType, currentMenuSection) => {
   const filterItemsTemplate = filterItems
-    .map((filter) => createFilterItemTemplate(filter, currentFilterType))
+    .map((filter) => createFilterItemTemplate(filter, currentFilterType, currentMenuSection))
     .join('');
 
   return (
@@ -37,22 +37,24 @@ const createFilterTemplate = (filterItems, currentFilterType) => {
       <div class="main-navigation__items">
           ${filterItemsTemplate}
       </div>
-      <a href="#stats" class="main-navigation__additional">Stats</a>
+      <a href="#stats" class="main-navigation__additional ${currentMenuSection === MenuItem.STATISTICS ? 'main-navigation__additional--active' : ''}">Stats</a>
     </nav>`);
 };
 
 export default class SiteMenu extends AbstractView {
-  constructor(filters, currentFilterType) {
+  constructor(filters, currentFilterType, currentMenuSection) {
     super();
 
     this._filters = filters;
     this._currentFilter = currentFilterType;
+    this._currentMenuSection = currentMenuSection;
 
     this._filterTypeChangeHandler = this._filterTypeChangeHandler.bind(this);
+    this._statisticsClickHandler = this._statisticsClickHandler.bind(this);
   }
 
   getTemplate() {
-    return createFilterTemplate(this._filters, this._currentFilter);
+    return createSiteMenuTemplate(this._filters, this._currentFilter, this._currentMenuSection);
   }
 
   _filterTypeChangeHandler(evt) {
@@ -64,8 +66,21 @@ export default class SiteMenu extends AbstractView {
     this._callback.filterTypeChange(evt.target.dataset.filterType);
   }
 
+  _statisticsClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.openStatistics(evt);
+  }
+
   setFilterTypeChangeHandler(callback) {
     this._callback.filterTypeChange = callback;
-    this.getElement().addEventListener('click', this._filterTypeChangeHandler);
+    this.getElement().querySelectorAll('.main-navigation__item')
+      .forEach((item) => item
+        .addEventListener('click', this._filterTypeChangeHandler));
+  }
+
+  setStatisticsClickHandler(callback) {
+    this._callback.openStatistics = callback;
+    this.getElement().querySelector('.main-navigation__additional')
+      .addEventListener('click', this._statisticsClickHandler);
   }
 }

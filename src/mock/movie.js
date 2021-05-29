@@ -7,6 +7,7 @@ import {
 import {generateList} from '../utils/movie.js';
 import {generateComment} from './comment.js';
 import {nanoid} from 'nanoid';
+import {generateDate} from '../utils/date-time.js';
 
 const MAX_COMMENTS = 5;
 const MIN_DURATION = 30;
@@ -107,7 +108,7 @@ export const generateMovie = () => {
     actors: generateList(ACTORS),
     productionYear,
     country: getRandomElementOfArray(COUNTRIES),
-    watchingDate: '',
+    watchingDate: generateDate(),
     isWatchlist: Boolean(getRandomInteger()),
     isWatched: Boolean(getRandomInteger()),
     isFavorite: Boolean(getRandomInteger()),

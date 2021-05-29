@@ -25,7 +25,7 @@ export default class MovieList {
     this._loadMoreButtonComponent = null;
 
     this._contentComponent = new ContentView();
-    this.contentContainerComponent = new ContentContainerView();
+    this._contentContainerComponent = new ContentContainerView();
     this._movieListComponent = new MovieListView();
     this._listEmptyComponent = new ListEmptyView();
 
@@ -34,9 +34,6 @@ export default class MovieList {
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleLoadMoreButtonClick = this._handleLoadMoreButtonClick.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
-
-    // this._moviesModel.addObserver(this._handleModelEvent);
-    // this._filterModel.addObserver(this._handleModelEvent);
   }
 
   init() {
@@ -45,7 +42,17 @@ export default class MovieList {
     this._moviesModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
 
-    this._renderFilmList();
+    this._renderMovieList();
+  }
+
+  destroy() {
+    this._clearMovieList({resetRenderedMovieCount: true, resetSortType: true});
+
+    remove(this._movieListComponent);
+    remove(this._contentComponent);
+
+    this._moviesModel.removeObserver(this._handleModelEvent);
+    this._filterModel.removeObserver(this._handleModelEvent);
   }
 
   _getMovies() {
@@ -79,12 +86,12 @@ export default class MovieList {
         this._moviePresenter[data.id].init(data);
         break;
       case UpdateType.MINOR:
-        this._clearFilmList();
-        this._renderFilmList();
+        this._clearMovieList();
+        this._renderMovieList();
         break;
       case UpdateType.MAJOR:
-        this._clearFilmList({resetRenderedMovieCount: true, resetSortType: true});
-        this._renderFilmList();
+        this._clearMovieList({resetRenderedMovieCount: true, resetSortType: true});
+        this._renderMovieList();
         break;
     }
   }
@@ -95,8 +102,8 @@ export default class MovieList {
     }
 
     this._currentSortType = sortType;
-    this._clearFilmList({resetRenderedMovieCount: true});
-    this._renderFilmList();
+    this._clearMovieList({resetRenderedMovieCount: true});
+    this._renderMovieList();
   }
 
   _renderSort() {
@@ -149,10 +156,10 @@ export default class MovieList {
     this._loadMoreButtonComponent = new LoadMoreButtonView();
     this._loadMoreButtonComponent.setClickHandler(this._handleLoadMoreButtonClick);
 
-    render(this.contentContainerComponent, this._loadMoreButtonComponent);
+    render(this._contentContainerComponent, this._loadMoreButtonComponent);
   }
 
-  _clearFilmList({resetRenderedMovieCount = false, resetSortType = false} = {}) {
+  _clearMovieList({resetRenderedMovieCount = false, resetSortType = false} = {}) {
     const movieCount = this._getMovies().length;
 
     Object
@@ -176,7 +183,7 @@ export default class MovieList {
     }
   }
 
-  _renderFilmList() {
+  _renderMovieList() {
     const movies = this._getMovies();
     const moviesCount = movies.length;
 
@@ -188,8 +195,8 @@ export default class MovieList {
     this._renderSort();
 
     render(this._movieListContainer, this._contentComponent);
-    render(this._contentComponent, this.contentContainerComponent);
-    render(this.contentContainerComponent, this._movieListComponent);
+    render(this._contentComponent, this._contentContainerComponent);
+    render(this._contentContainerComponent, this._movieListComponent);
     this._renderMovies(movies.slice(0, Math.min(moviesCount, this._renderedMovieCount)));
 
     if (moviesCount > this._renderedMovieCount) {
