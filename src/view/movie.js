@@ -1,6 +1,7 @@
 import {formatDuration} from '../utils/date-time.js';
 import {MAX_LENGTH_SHORT_DESCRIPTION} from '../utils/movie.js';
 import AbstractView from './abstract.js';
+import dayjs from 'dayjs';
 
 const createMovieTemplate = (movie) => {
   const {
@@ -32,11 +33,11 @@ const createMovieTemplate = (movie) => {
         <h3 class="film-card__title">${title}</h3>
         <p class="film-card__rating">${rating}</p>
         <p class="film-card__info">
-            <span class="film-card__year">${productionYear}</span>
+            <span class="film-card__year">${dayjs(productionYear.date).format('YYYY')}</span>
             <span class="film-card__duration">${formatDuration(duration)}</span>
             <span class="film-card__genre">${genres[0]}</span>
         </p>
-        <img src="./images/posters/${poster}" alt="" class="film-card__poster">
+        <img src="${poster}" alt="" class="film-card__poster">
         <p class="film-card__description">${shortDescription}</p>
         <a class="film-card__comments">${comments.length} comments</a>
         <div class="film-card__controls">

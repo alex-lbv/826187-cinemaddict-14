@@ -15,6 +15,20 @@ export const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  INIT: 'INIT',
+};
+
+export const UserAction = {
+  UPDATE_MOVIE: 'UPDATE_MOVIE',
+  ADD_COMMENT: 'ADD_COMMENT',
+  DELETE_COMMENT: 'DELETE_COMMENT',
+};
+
+export const MoviePopupState = {
+  SENDING: 'SENDING',
+  DELETING: 'DELETING',
+  ABORTING_SENDING: 'ABORTING_SENDING',
+  ABORTING_DELETING: 'ABORTING_DELETING',
 };
 
 export const StatisticsFilter = {

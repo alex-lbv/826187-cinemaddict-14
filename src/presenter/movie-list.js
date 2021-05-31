@@ -9,17 +9,20 @@ import Movie from './movie.js';
 import {SortType, UpdateType} from '../const.js';
 import {sortDate, sortRating} from '../utils/movie.js';
 import {filter} from '../utils/filter.js';
+import LoadingView from '../view/loading.js';
 
 const MOVIE_COUNT_PER_STEP = 5;
 
 export default class MovieList {
-  constructor(movieListContainer, moviesModel, filterModel) {
+  constructor(movieListContainer, moviesModel, filterModel, api) {
     this._moviesModel = moviesModel;
     this._filterModel = filterModel;
     this._movieListContainer = movieListContainer;
     this._renderedMovieCount = MOVIE_COUNT_PER_STEP;
     this._moviePresenter = {};
     this._currentSortType = SortType.DEFAULT;
+    this._isLoading = true;
+    this._api = api;
 
     this._sortComponent = null;
     this._loadMoreButtonComponent = null;
@@ -28,6 +31,7 @@ export default class MovieList {
     this._contentContainerComponent = new ContentContainerView();
     this._movieListComponent = new MovieListView();
     this._listEmptyComponent = new ListEmptyView();
+    this._loadingComponent = new LoadingView();
 
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
@@ -77,7 +81,9 @@ export default class MovieList {
   }
 
   _handleViewAction(updateType, update) {
-    this._moviesModel.updateMovie(updateType, update);
+    this._api.updateMovie(update).then((response) => {
+      this._moviesModel.updateMovie(updateType, response);
+    });
   }
 
   _handleModelEvent(updateType, data) {
@@ -91,6 +97,11 @@ export default class MovieList {
         break;
       case UpdateType.MAJOR:
         this._clearMovieList({resetRenderedMovieCount: true, resetSortType: true});
+        this._renderMovieList();
+        break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingComponent);
         this._renderMovieList();
         break;
     }
@@ -121,7 +132,8 @@ export default class MovieList {
     const moviePresenter = new Movie(
       this._movieListComponent,
       this._handleViewAction,
-      this._handleModeChange);
+      this._handleModeChange,
+      this._api);
     moviePresenter.init(movie);
     this._moviePresenter[movie.id] = moviePresenter;
   }
@@ -159,6 +171,10 @@ export default class MovieList {
     render(this._contentContainerComponent, this._loadMoreButtonComponent);
   }
 
+  _renderLoading() {
+    render(this._contentContainerComponent, this._loadingComponent);
+  }
+
   _clearMovieList({resetRenderedMovieCount = false, resetSortType = false} = {}) {
     const movieCount = this._getMovies().length;
 
@@ -170,6 +186,7 @@ export default class MovieList {
 
     remove(this._sortComponent);
     remove(this._listEmptyComponent);
+    remove(this._loadingComponent);
     remove(this._loadMoreButtonComponent);
 
     if (resetRenderedMovieCount) {
@@ -184,6 +201,11 @@ export default class MovieList {
   }
 
   _renderMovieList() {
+    if (this._isLoading) {
+      this._renderLoading();
+      return;
+    }
+
     const movies = this._getMovies();
     const moviesCount = movies.length;
 

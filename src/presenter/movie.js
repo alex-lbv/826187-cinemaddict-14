@@ -1,7 +1,8 @@
 import MovieView from '../view/movie.js';
 import MoviePopupView from '../view/movie-popup.js';
 import {remove, render, replace} from '../utils/render.js';
-import {UpdateType} from '../const.js';
+import {MoviePopupState, UpdateType, UserAction} from '../const.js';
+import CommentsModel from '../model/comments.js';
 
 const Mode = {
   CARD: 'CARD',
@@ -9,10 +10,12 @@ const Mode = {
 };
 
 export default class Movie {
-  constructor(movieListContainer, changeData, changeMode) {
+  constructor(movieListContainer, changeData, changeMode, api) {
     this._movieListContainer = movieListContainer;
     this._changeData = changeData;
     this._changeMode = changeMode;
+    this._commentsModel = new CommentsModel();
+    this._api = api;
 
     this._movieComponent = null;
     this._moviePopupComponent = null;
@@ -25,9 +28,12 @@ export default class Movie {
     this._handleWatchedClick = this._handleWatchedClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._handleCloseClick = this._handleCloseClick.bind(this);
-    this._handleCommentDelete = this._handleCommentDelete.bind(this);
+    this._handleCommentDeleteClick = this._handleCommentDeleteClick.bind(this);
     this._commentAddHandler = this._commentAddHandler.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
+    this._handleModelEvent = this._handleModelEvent.bind(this);
+
+    this._commentsModel.addObserver(this._handleModelEvent);
   }
 
   init(movie) {
@@ -35,7 +41,7 @@ export default class Movie {
 
     const prevMovieComponent = this._movieComponent;
 
-    this._movieComponent = new MovieView(movie);
+    this._movieComponent = new MovieView(this._movie);
 
     this._movieComponent.setOpenClickHandler(this._handleOpenClick);
     this._movieComponent.setWatchlistClickHandler(this._handleWatchlistClick);
@@ -55,6 +61,10 @@ export default class Movie {
 
   destroy() {
     remove(this._movieComponent);
+
+    if (this._mode === Mode.CARD) {
+      remove(this._moviePopupComponent);
+    }
   }
 
   resetView() {
@@ -63,56 +73,123 @@ export default class Movie {
     }
   }
 
-  _openMoviePopup() {
+  setViewState(state, id) {
+    const resetState = () => {
+      this._moviePopupComponent.updateData({
+        isDeleting: false,
+        deletingCommentId: '',
+        isDisabled: false,
+      });
+    };
+
+    switch (state) {
+      case MoviePopupState.SENDING:
+        this._moviePopupComponent.updateData({
+          isDisabled: true,
+        });
+        break;
+      case MoviePopupState.DELETING:
+        this._moviePopupComponent.updateData({
+          isDeleting: true,
+          deletingCommentId: id,
+        });
+        break;
+      case MoviePopupState.ABORTING_SENDING:
+        this._moviePopupComponent.shake(resetState);
+        break;
+    }
+  }
+
+  _openMoviePopup(comments) {
     this._changeMode();
     this._mode = Mode.POPUP;
+    this._comments = comments;
 
     const prevMoviePopupComponent = this._moviePopupComponent;
-    this._moviePopupComponent = new MoviePopupView(this._movie);
+    this._moviePopupComponent = new MoviePopupView(this._movie, this._comments);
 
     this._moviePopupComponent.setCloseClickHandler(this._handleCloseClick);
     this._moviePopupComponent.setWatchlistClickHandler(this._handleWatchlistClick);
     this._moviePopupComponent.setWatchedClickHandler(this._handleWatchedClick);
     this._moviePopupComponent.setFavoriteClickHandler(this._handleFavoriteClick);
-    this._moviePopupComponent.setCommentDeleteHandler(this._handleCommentDelete);
-    this._moviePopupComponent.setCommentAddHandler(this._commentAddHandler);
+    this._moviePopupComponent.setCommentDeleteHandler(this._handleCommentDeleteClick);
 
     if (prevMoviePopupComponent === null) {
       render(this._moviePopupContainer, this._moviePopupComponent);
+      this._moviePopupContainer.classList.add('hide-overflow');
       document.addEventListener('keydown', this._escKeyDownHandler);
-      document.body.classList.add('hide-overflow');
+      document.addEventListener('keydown', this._commentAddHandler);
       return;
     }
 
     if (this._mode === Mode.POPUP) {
       replace(this._moviePopupComponent, prevMoviePopupComponent);
+      this._moviePopupContainer.classList.add('hide-overflow');
       document.addEventListener('keydown', this._escKeyDownHandler);
-      document.body.classList.add('hide-overflow');
+      document.addEventListener('keydown', this._commentAddHandler);
     }
 
     remove(prevMoviePopupComponent);
   }
 
   _closeMoviePopup() {
-    if (this._mode !== Mode.CARD) {
-      this._moviePopupComponent.getElement().remove();
-      document.body.classList.remove('hide-overflow');
-      document.removeEventListener('keydown', this._escKeyDownHandler);
-      this._moviePopupComponent = null;
-      this._mode = Mode.CARD;
-    }
+    this._changeData(UpdateType.MINOR, this._movie);
+    remove(this._moviePopupComponent);
+    this._commentsModel.removeObserver(this._handleModelEvent);
+    this._moviePopupContainer.classList.remove('hide-overflow');
+    document.removeEventListener('keydown', this._escKeyDownHandler);
+    document.removeEventListener('keydown', this._commentAddHandler);
+    this._mode = Mode.CARD;
   }
 
   _escKeyDownHandler(evt) {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
-      this._moviePopupComponent.reset(this._movie);
       this._closeMoviePopup();
     }
   }
 
+  _handleModelEvent(userAction) {
+    switch (userAction) {
+      case UserAction.ADD_COMMENT:
+        this._changeData(
+          UpdateType.PATCH,
+          Object.assign(
+            {},
+            this._movie,
+            {
+              comments: this._commentsModel.getComments().map((item) => item.id),
+            },
+          ),
+        );
+        this._moviePopupComponent.updateMoviePopup(this._commentsModel.getComments());
+        break;
+      case UserAction.DELETE_COMMENT:
+        this._changeData(
+          UpdateType.PATCH,
+          Object.assign(
+            {},
+            this._movie,
+            {
+              comments: this._commentsModel.getComments().map((item) => item.id),
+            },
+          ),
+        );
+        this._moviePopupComponent.updateMoviePopup(this._commentsModel.getComments());
+        break;
+    }
+  }
+
   _handleOpenClick() {
-    this._openMoviePopup();
+    this._api.getComments(this._movie.id)
+      .then((comments) => {
+        this._commentsModel.setComments(comments);
+        this._openMoviePopup(this._commentsModel.getComments());
+      })
+      .catch(() => {
+        this._commentsModel.setComments([]);
+        this._openMoviePopup(this._commentsModel.getComments());
+      });
   }
 
   _handleWatchlistClick() {
@@ -158,21 +235,29 @@ export default class Movie {
     this._closeMoviePopup();
   }
 
-  _handleCommentDelete(evt, id) {
-    evt.preventDefault();
-    const movie = this._movie;
-    const comments = movie.comments.filter((item) => item.id !== id);
-
-    this._changeData(
-      UpdateType.PATCH,
-      Object.assign(
-        {},
-        this._movie,
-        {comments},
-      ),
-    );
+  _handleCommentDeleteClick(id) {
+    this.setViewState(MoviePopupState.DELETING, id);
+    this._api.deleteComment(id)
+      .then(() => {
+        this._commentsModel.deleteComment(UserAction.DELETE_COMMENT, id);
+      })
+      .catch(() => {
+        this.setViewState(MoviePopupState.ABORTING_DELETING);
+      });
   }
 
-  _commentAddHandler() {
+  _commentAddHandler(evt) {
+    if ((evt.ctrlKey || evt.metaKey) && evt.code === 'Enter') {
+      const newComment = this._moviePopupComponent.getNewComment();
+      this.setViewState(MoviePopupState.SENDING);
+      this._api.addComment(this._movie.id, newComment)
+        .then((response) => {
+          const addingComment = response.comments[response.comments.length - 1];
+          return this._commentsModel.addComment(UserAction.ADD_COMMENT, addingComment);
+        })
+        .catch(() => {
+          this.setViewState(MoviePopupState.ABORTING_SENDING);
+        });
+    }
   }
 }

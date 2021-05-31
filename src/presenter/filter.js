@@ -41,8 +41,7 @@ export default class Filter {
   }
 
   _handleModelEvent() {
-    // this.init();
-    this.init(this._handleMenuClick);
+    this.init();
   }
 
   _handleFilterTypeChange(filterType) {
