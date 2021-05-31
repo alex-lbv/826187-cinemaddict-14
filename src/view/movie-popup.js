@@ -22,7 +22,7 @@ export const createPopupMovieTemplate = (data) => {
     poster,
     ageRating,
     producer,
-    writers,
+    screenwriters,
     actors,
     productionYear,
     duration,
@@ -87,7 +87,7 @@ export const createPopupMovieTemplate = (data) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Writers</td>
-                <td class="film-details__cell">${writers}</td>
+                <td class="film-details__cell">${screenwriters}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Actors</td>
