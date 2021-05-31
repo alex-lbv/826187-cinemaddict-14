@@ -25,7 +25,7 @@ export const createPopupMovieTemplate = (data) => {
     writers,
     actors,
     productionYear,
-    runtime,
+    duration,
     genres,
     description,
     country,
@@ -99,7 +99,7 @@ export const createPopupMovieTemplate = (data) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>
-                <td class="film-details__cell">${formatDuration(runtime)}</td>
+                <td class="film-details__cell">${formatDuration(duration)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Country</td>
