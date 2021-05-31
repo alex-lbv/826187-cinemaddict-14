@@ -194,7 +194,7 @@ export default class Movie {
 
   _handleWatchlistClick() {
     this._changeData(
-      UpdateType.PATCH,
+      this._mode === Mode.CARD ? UpdateType.MINOR : this._mode === Mode.POPUP ? UpdateType.PATCH : '',
       Object.assign(
         {},
         this._movie,
@@ -207,7 +207,7 @@ export default class Movie {
 
   _handleWatchedClick() {
     this._changeData(
-      UpdateType.PATCH,
+      this._mode === Mode.CARD ? UpdateType.MINOR : this._mode === Mode.POPUP ? UpdateType.PATCH : '',
       Object.assign(
         {},
         this._movie,
@@ -220,7 +220,7 @@ export default class Movie {
 
   _handleFavoriteClick() {
     this._changeData(
-      UpdateType.PATCH,
+      this._mode === Mode.CARD ? UpdateType.MINOR : this._mode === Mode.POPUP ? UpdateType.PATCH : '',
       Object.assign(
         {},
         this._movie,
